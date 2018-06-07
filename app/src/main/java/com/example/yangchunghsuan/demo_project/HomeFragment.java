@@ -3,12 +3,20 @@ package com.example.yangchunghsuan.demo_project;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.zip.Inflater;
 
 
 /**
@@ -72,22 +80,23 @@ public class HomeFragment extends Fragment {
     }
 
 
+    private ViewPager viewPager;
+    private List<PageView> pageList;
+    View view;
+
     //主要操作區
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+
         // Inflate the layout for this fragment
 
         //取得目前這個view的內容
-        final View view = inflater.inflate(R.layout.fragment_home, container, false);
-        //從這個view找button
-        Button button = view.findViewById(R.id.button_home);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(view.getContext(),"Home Page",Toast.LENGTH_SHORT).show();
-            }
-        });
+        view = inflater.inflate(R.layout.fragment_home, container, false);
+        initData();
+        initView();
+
 
 
         return view;
@@ -131,4 +140,61 @@ public class HomeFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+    public class home1 extends PageView{
+
+        public home1(Context context) {
+            super(context);
+            View view = LayoutInflater.from(context).inflate(R.layout.home_1,null);
+            addView(view);
+        }
+    }
+
+    public class home2 extends PageView{
+
+        public home2(Context context) {
+            super(context);
+            View view = LayoutInflater.from(context).inflate(R.layout.home_2,null);
+            addView(view);
+        }
+    }
+
+    private void initView(){
+        viewPager = view.findViewById(R.id.pager);
+        viewPager.setAdapter(new ViewPagerAdapter());
+    }
+
+    private void initData(){
+        pageList = new ArrayList<>();
+        pageList.add(new home1(view.getContext()));
+        pageList.add(new home2(view.getContext()));
+    }
+
+    private class ViewPagerAdapter extends PagerAdapter {
+
+        @Override
+        public int getCount() {
+            return pageList.size();
+        }
+
+        @Override
+        public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
+            return object==view;
+        }
+
+        @NonNull
+        @Override
+        public Object instantiateItem(@NonNull ViewGroup container, int position) {
+            container.addView(pageList.get(position));
+            return pageList.get(position);
+        }
+
+        @Override
+        public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
+            container.removeView((View)object);
+        }
+    }
+
+
+
 }

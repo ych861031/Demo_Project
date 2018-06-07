@@ -20,18 +20,23 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnFr
             switch (item.getItemId()) {
                 case R.id.navigation_home:
                     getSupportFragmentManager().beginTransaction().replace(R.id.frame,HomeFragment.newInstance()).commitAllowingStateLoss();
+                    setTitle("Home");
                     return true;
                 case R.id.navigation_search:
                     getSupportFragmentManager().beginTransaction().replace(R.id.frame,SearchFragment.newInstance()).commitAllowingStateLoss();
+                    setTitle("Search");
                     return true;
                 case R.id.navigation_upload:
                     getSupportFragmentManager().beginTransaction().replace(R.id.frame,UploadFragment.newInstance()).commitAllowingStateLoss();
+                    setTitle("Upload");
                     return true;
                 case R.id.navigation_nearby:
                     getSupportFragmentManager().beginTransaction().replace(R.id.frame,NearbyFragment.newInstance()).commitAllowingStateLoss();
+                    setTitle("Nearby");
                     return true;
                 case R.id.navigation_personal:
                     getSupportFragmentManager().beginTransaction().replace(R.id.frame,PersonalFragment.newInstance()).commitAllowingStateLoss();
+                    setTitle("Personal");
                     return true;
             }
             return false;
@@ -43,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnFr
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        setTitle("Home");
         getSupportFragmentManager().beginTransaction().replace(R.id.frame,HomeFragment.newInstance()).commitAllowingStateLoss();
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
