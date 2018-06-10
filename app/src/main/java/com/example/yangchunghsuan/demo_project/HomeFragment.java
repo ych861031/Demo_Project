@@ -1,17 +1,21 @@
 package com.example.yangchunghsuan.demo_project;
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -96,9 +100,6 @@ public class HomeFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_home, container, false);
         initData();
         initView();
-
-
-
         return view;
     }
 
@@ -141,14 +142,65 @@ public class HomeFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
+    private RecyclerView recyclerView;
+    private HomeAdapter homeAdapter;
+    private RecyclerView.LayoutManager layoutManager;
+
+    private List<HomeInfo> items;
+
     public class home1 extends PageView{
 
         public home1(Context context) {
             super(context);
-            View view = LayoutInflater.from(context).inflate(R.layout.home_1,null);
-            addView(view);
+            View v = LayoutInflater.from(context).inflate(R.layout.home_1,null);
+
+
+            recyclerView = v.findViewById(R.id.recyclerview);
+            recyclerView.setHasFixedSize(true);
+
+            items = new ArrayList<>();
+            items.add(new HomeInfo("1"));
+            items.add(new HomeInfo("2"));
+            items.add(new HomeInfo("3"));
+            items.add(new HomeInfo("4"));
+            items.add(new HomeInfo("5"));
+
+            layoutManager = new LinearLayoutManager(v.getContext());
+            recyclerView.setLayoutManager(layoutManager);
+
+            homeAdapter = new HomeAdapter(items,v.getContext()){
+                @Override
+                public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+                    super.onBindViewHolder(holder, position);
+                }
+            };
+            SpacesItemDecoration spacesItemDecoration = new SpacesItemDecoration(10);
+
+            recyclerView.addItemDecoration(spacesItemDecoration);
+            recyclerView.setAdapter(homeAdapter);
+            addView(v);
+
         }
     }
+
+    public class SpacesItemDecoration extends RecyclerView.ItemDecoration{
+        private int space;
+
+        public SpacesItemDecoration(int space){
+            this.space = space;
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+            outRect.top = space;
+        }
+    }
+
+
+
+
+
+
 
     public class home2 extends PageView{
 

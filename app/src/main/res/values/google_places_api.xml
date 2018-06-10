@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="google_places_api" templateMergeStrategy="preserve" translatable="false">AIzaSyAYbRCcmoalWbHSeqWtFbIlUzuAWbUHtWY</string>
+    
+</resources>
+
+    <!--https://console.cloud.google.com/apis/credentials?project=demoproject-fce8b&folder&organizationId-->

@@ -1,6 +1,7 @@
 package com.example.yangchunghsuan.demo_project;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,6 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
+
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.maps.MapView;
 
 
 /**
@@ -86,6 +90,9 @@ public class SearchFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Toast.makeText(view.getContext(),"Search Page",Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent();
+                intent.setClass(getContext(), MapActivity.class);
+                startActivity(intent);
             }
         });
         //回傳這個view讓MainActivity更改fragment

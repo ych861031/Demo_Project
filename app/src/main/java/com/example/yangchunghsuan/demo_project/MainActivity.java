@@ -24,8 +24,9 @@ LoginFragment.OnFragmentInteractionListener{
                     setTitle("Home");
                     return true;
                 case R.id.navigation_search:
-                    getSupportFragmentManager().beginTransaction().replace(R.id.frame,SearchFragment.newInstance()).commitAllowingStateLoss();
+//                    getSupportFragmentManager().beginTransaction().replace(R.id.frame,SearchFragment.newInstance()).commitAllowingStateLoss();
                     setTitle("Search");
+                    getSupportFragmentManager().beginTransaction().replace(R.id.frame,SearchFragment.newInstance()).commitAllowingStateLoss();
                     return true;
                 case R.id.navigation_upload:
                     getSupportFragmentManager().beginTransaction().replace(R.id.frame,UploadFragment.newInstance()).commitAllowingStateLoss();
@@ -51,17 +52,27 @@ LoginFragment.OnFragmentInteractionListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        //get nearby api
+//        getRestaurant get = new getRestaurant();
+//        get.execute();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+//        setTitle("Home");
+//        getSupportFragmentManager().beginTransaction().replace(R.id.frame,HomeFragment.newInstance()).commitAllowingStateLoss();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         setTitle("Home");
+        navigation.setSelectedItemId(R.id.navigation_home);
         getSupportFragmentManager().beginTransaction().replace(R.id.frame,HomeFragment.newInstance()).commitAllowingStateLoss();
+
     }
 
     @Override
