@@ -15,31 +15,36 @@
         android:orientation="vertical"
         >
 
-    <TextView
+        <TextView
         android:id="@+id/tv_account"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:text="帳號/Account:"
         android:textSize="30sp" />
 
-    <EditText
-        android:id="@+id/edt_account"
-        android:layout_width="match_parent"
-        android:layout_height="48dp" />
+        <EditText
+            android:id="@+id/editText_account"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName" />
 
-    <TextView
+        <TextView
         android:id="@+id/tv_password"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:text="密碼/Password:"
         android:textSize="30sp" />
 
-    <EditText
-        android:id="@+id/edt_password"
-        android:layout_width="match_parent"
-        android:layout_height="48dp" />
 
-    <LinearLayout
+        <EditText
+            android:id="@+id/editText_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPassword" />
+
+        <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:orientation="horizontal">

@@ -22,7 +22,7 @@ import android.widget.EditText;
  */
 public class LoginFragment extends Fragment {
 
- private EditText btn_registered;
+    Button btn_registered;
 
     public static LoginFragment newInstance() {
         
