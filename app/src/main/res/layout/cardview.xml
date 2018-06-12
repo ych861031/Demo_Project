@@ -23,7 +23,7 @@
                 android:layout_height="250dp"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                app:srcCompat="@drawable/f1" />
+                />
 
             <LinearLayout
                 android:layout_width="match_parent"

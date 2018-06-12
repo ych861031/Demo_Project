@@ -4,12 +4,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 
 /**
@@ -22,7 +31,6 @@ import android.widget.EditText;
  */
 public class LoginFragment extends Fragment {
 
-    Button btn_registered;
 
     public static LoginFragment newInstance() {
         
@@ -66,6 +74,9 @@ public class LoginFragment extends Fragment {
         return fragment;
     }
 
+    FirebaseAuth auth;
+    EditText account;
+    EditText password;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,10 +85,15 @@ public class LoginFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        auth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = auth.getCurrentUser();
 
     }
 
     View view;
+    Button btn_registered;
+    Button btn_login;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -85,21 +101,52 @@ public class LoginFragment extends Fragment {
 
         view =  inflater.inflate(R.layout.fragment_login, container, false);
         btn_registered = view.findViewById(R.id.btn_registered);
+        btn_login = view.findViewById(R.id.btn_login);
+        btn_registered.setOnClickListener(listener_registered);
+        btn_login.setOnClickListener(listener_login);
 
-        btn_registered.setOnClickListener(listener);
+        account = view.findViewById(R.id.editText_account);
+        password = view.findViewById(R.id.editText_password);
+
+
         return view;
-
 
     }
 
-    private Button.OnClickListener listener = new Button.OnClickListener() {
+    private Button.OnClickListener listener_registered = new Button.OnClickListener() {
         @Override
         public void onClick(View v) {
 
             Intent intent = new Intent();
             intent.setClass(view.getContext(),RegisteredActivity.class);
-            startActivity(intent);
+            startActivityForResult(intent,1);
+
        }
+    };
+
+
+
+
+    private Button.OnClickListener listener_login = new Button.OnClickListener(){
+
+
+        @Override
+        public void onClick(View v) {
+
+            auth.signInWithEmailAndPassword(account.getText().toString(),password.getText().toString())
+                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()){
+                                Log.e("auth","login");
+                                Toast.makeText(view.getContext(),"登入",Toast.LENGTH_SHORT).show();
+                            }else{
+                                Log.e("auth","login fail");
+                                Toast.makeText(view.getContext(),"無法登入",Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+        }
     };
 
     // TODO: Rename method, update argument and hook method into UI event

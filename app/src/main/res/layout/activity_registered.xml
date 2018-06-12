@@ -6,69 +6,83 @@
     android:layout_height="match_parent"
     tools:context=".RegisteredActivity">
 
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/tv_name"
+        <LinearLayout
+            android:id="@+id/linearLayout"
             android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:text="用戶名/Name:"
-            android:textSize="24sp" />
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-        <EditText
-            android:id="@+id/edt_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:text="用戶名/Name:"
+                android:textSize="24sp" />
 
-        <TextView
-            android:id="@+id/tv_smartphone"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:text=" 手機號碼/Smartphone:"
-            android:textSize="24sp" />
+            <EditText
+                android:id="@+id/edt_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
-        <EditText
-            android:id="@+id/edt_smartphone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/tv_smartphone"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:text=" 手機號碼/Cellphone Number:"
+                android:textSize="24sp" />
 
-        <TextView
-            android:id="@+id/tv_mail"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:text=" E-mail:"
-            android:textSize="24sp" />
+            <EditText
+                android:id="@+id/edt_smartphone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
-        <EditText
-            android:id="@+id/edt_mail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/tv_mail"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:text=" E-mail:"
+                android:textSize="24sp" />
 
-        <TextView
-            android:id="@+id/tv_password"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:text="密碼/Password:"
-            android:textSize="24sp" />
+            <EditText
+                android:id="@+id/edt_mail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
-        <EditText
-            android:id="@+id/edt_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/tv_password"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:text="密碼/Password:"
+                android:textSize="24sp" />
+
+            <EditText
+                android:id="@+id/edt_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPassword" />
+
+            <Button
+                android:id="@+id/button_send_registered"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="確認"
+                tools:layout_editor_absoluteX="148dp"
+                tools:layout_editor_absoluteY="407dp" />
 
 
-    </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
 </android.support.constraint.ConstraintLayout>

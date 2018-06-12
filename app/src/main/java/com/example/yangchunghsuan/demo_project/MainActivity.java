@@ -1,5 +1,6 @@
 package com.example.yangchunghsuan.demo_project;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -69,12 +70,19 @@ LoginFragment.OnFragmentInteractionListener{
         }
     };
 
-
+    BottomNavigationView navigation ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Log.e("!!!","homeOnCreate");
+        navigation = findViewById(R.id.navigation);
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        getSupportFragmentManager().beginTransaction().replace(R.id.frame,HomeFragment.newInstance()).commitAllowingStateLoss();
+        setTitle("Login");
+        navigation.setSelectedItemId(R.id.navigation_personal);
+        getSupportFragmentManager().beginTransaction().replace(R.id.frame,LoginFragment.newInstance()).commitAllowingStateLoss();
+
         //get nearby api
 //        getRestaurant get = new getRestaurant();
 //        get.execute();
@@ -92,19 +100,33 @@ LoginFragment.OnFragmentInteractionListener{
     @Override
     protected void onResume() {
         super.onResume();
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 //        setTitle("Home");
 //        navigation.setSelectedItemId(R.id.navigation_home);
 //        getSupportFragmentManager().beginTransaction().replace(R.id.frame,HomeFragment.newInstance()).commitAllowingStateLoss();
-        getSupportFragmentManager().beginTransaction().replace(R.id.frame,HomeFragment.newInstance()).commitAllowingStateLoss();
-        setTitle("Search");
-        navigation.setSelectedItemId(R.id.navigation_search);
-        getSupportFragmentManager().beginTransaction().replace(R.id.frame,SearchFragment.newInstance()).commitAllowingStateLoss();
+//        getSupportFragmentManager().beginTransaction().replace(R.id.frame,HomeFragment.newInstance()).commitAllowingStateLoss();
+//        setTitle("Search");
+//        navigation.setSelectedItemId(R.id.navigation_search);
+//        getSupportFragmentManager().beginTransaction().replace(R.id.frame,SearchFragment.newInstance()).commitAllowingStateLoss();
 
     }
 
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (data == null){
+            return;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (resultCode){
+            case RESULT_OK:
+                Log.e("activity result","result ok!!!!!!!!!");
+                getSupportFragmentManager().beginTransaction().replace(R.id.frame,LoginFragment.newInstance()).commitAllowingStateLoss();
+                navigation.setSelectedItemId(R.id.navigation_personal);
+                break;
+        }
+
+
+    }
 
     @Override
     public void onFragmentInteraction(Uri uri) {
