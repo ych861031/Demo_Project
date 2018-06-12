@@ -82,7 +82,8 @@ public class UploadFragment extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(view.getContext(),"Upload Page",Toast.LENGTH_SHORT).show();
+                Toast.makeText(view.getContext(),"Upload Page test",Toast.LENGTH_SHORT).show();
+
             }
         });
         //回傳這個view讓MainActivity更改fragment
