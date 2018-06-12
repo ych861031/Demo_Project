@@ -4,8 +4,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import org.json.JSONObject;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
+
 
 import java.io.BufferedReader;
 import java.io.InputStream;

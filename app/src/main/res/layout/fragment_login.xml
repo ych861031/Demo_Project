@@ -5,6 +5,61 @@
     android:layout_height="match_parent"
     tools:context=".LoginFragment">
 
+    <LinearLayout
+        android:layout_width="368dp"
+        android:layout_height="495dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:orientation="vertical"
+        >
+
+    <TextView
+        android:id="@+id/tv_account"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="帳號/Account:"
+        android:textSize="30sp" />
+
+    <EditText
+        android:id="@+id/edt_account"
+        android:layout_width="match_parent"
+        android:layout_height="48dp" />
+
+    <TextView
+        android:id="@+id/tv_password"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="密碼/Password:"
+        android:textSize="30sp" />
+
+    <EditText
+        android:id="@+id/edt_password"
+        android:layout_width="match_parent"
+        android:layout_height="48dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="登入/Login" />
+
+        <Button
+            android:id="@+id/btn_registered"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="註冊/Registered" />
+    </LinearLayout>
+
+</LinearLayout>
     <!-- TODO: Update blank fragment layout -->
 
     <android.support.constraint.ConstraintLayout
