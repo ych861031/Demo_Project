@@ -15,6 +15,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,9 +37,12 @@ public class home1 extends PageView{
     public static String[] store_name = new String[100];
 
     String get;
+    int i;
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference databaseRef;
+    DatabaseReference databaseRefName;
+    DatabaseReference databaseRefAddress;
     public home1(Context context) {
         super(context);
         View v = LayoutInflater.from(context).inflate(R.layout.home_1,null);
@@ -51,46 +55,20 @@ public class home1 extends PageView{
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 get = dataSnapshot.getValue().toString();
+
                 if ( get != null){
 //                    Log.e("length!!!!!",String.valueOf(get));
                     length = Integer.parseInt(get);
                     Log.e("length!!!!",String.valueOf(length));
-
-                    for (int i=1;i<=length;i++) {
-                        databaseRef = database.getReference("homepage/" + i + "/info");
-                        databaseRef.addChildEventListener(new ChildEventListener() {
+                    for (i= 1;i<=length;i++){
+                        databaseRefName = database.getReference("homepage/" + i + "/info/name");
+                        databaseRefName.addValueEventListener(new ValueEventListener() {
                             @Override
-                            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                Log.e("get value",dataSnapshot.getValue().toString());
                                 get = dataSnapshot.getValue().toString();
-                                if (get!=null){
-                                    if (j%2==0){
-                                        address[loc_length++]=get;
-                                        Log.e(String.valueOf(loc_length-1),address[loc_length-1]);
-
-                                    }else{
-                                        store_name[name_length++] = get;
-                                        Log.e(String.valueOf(name_length-1),store_name[name_length-1]);
-                                    }
-                                    j++;
-                                }
-
-                            }
-
-
-
-                            @Override
-                            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                            }
-
-                            @Override
-                            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-                            }
-
-                            @Override
-                            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
+                                store_name[name_length++] = get;
+                                Log.e("get value",String.valueOf(i));
                             }
 
                             @Override
@@ -98,11 +76,22 @@ public class home1 extends PageView{
 
                             }
                         });
+                        databaseRefAddress = database.getReference("homepage/" + i + "/info/address");
+                        databaseRefAddress.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                Log.e("get value",dataSnapshot.getValue().toString());
+                                get = dataSnapshot.getValue().toString();
+                                address[loc_length++] = get;
+                            }
 
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+//                        items.add(new HomeInfo(store_name[i],address[i],HomeFragment.bitmap[i]));
                     }
-
-
-
                 }
             }
 
@@ -126,6 +115,10 @@ public class home1 extends PageView{
 
             }
         });
+//        for (String a:address) {
+//            Log.e("test",a);
+//        }
+
 
 
         items.add(new HomeInfo(store_name[0],address[0],HomeFragment.bitmap[0]));

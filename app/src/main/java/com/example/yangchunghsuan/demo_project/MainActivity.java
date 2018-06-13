@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnFr
 ,UploadFragment.OnFragmentInteractionListener,NearbyFragment.OnFragmentInteractionListener,PersonalFragment.OnFragmentInteractionListener,
 LoginFragment.OnFragmentInteractionListener{
 
+    public static boolean login = false;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -62,8 +63,14 @@ LoginFragment.OnFragmentInteractionListener{
                 case R.id.navigation_personal:
 //                    getSupportFragmentManager().beginTransaction().replace(R.id.frame,PersonalFragment.newInstance()).commitAllowingStateLoss();
 //                    setTitle("Personal");
-                    getSupportFragmentManager().beginTransaction().replace(R.id.frame,LoginFragment.newInstance()).commitAllowingStateLoss();
-                    setTitle("Login");
+                    if (!login){
+                        getSupportFragmentManager().beginTransaction().replace(R.id.frame,LoginFragment.newInstance()).commitAllowingStateLoss();
+                        setTitle("Login");
+                    }else {
+                        getSupportFragmentManager().beginTransaction().replace(R.id.frame,PersonalFragment.newInstance()).commitAllowingStateLoss();
+                        setTitle("Personal");
+                    }
+
                     return true;
             }
             return false;
@@ -79,9 +86,7 @@ LoginFragment.OnFragmentInteractionListener{
         navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         getSupportFragmentManager().beginTransaction().replace(R.id.frame,HomeFragment.newInstance()).commitAllowingStateLoss();
-        setTitle("Login");
-        navigation.setSelectedItemId(R.id.navigation_personal);
-        getSupportFragmentManager().beginTransaction().replace(R.id.frame,LoginFragment.newInstance()).commitAllowingStateLoss();
+
 
         //get nearby api
 //        getRestaurant get = new getRestaurant();
@@ -100,6 +105,9 @@ LoginFragment.OnFragmentInteractionListener{
     @Override
     protected void onResume() {
         super.onResume();
+        setTitle("Login");
+        navigation.setSelectedItemId(R.id.navigation_personal);
+        getSupportFragmentManager().beginTransaction().replace(R.id.frame,LoginFragment.newInstance()).commitAllowingStateLoss();
 //        setTitle("Home");
 //        navigation.setSelectedItemId(R.id.navigation_home);
 //        getSupportFragmentManager().beginTransaction().replace(R.id.frame,HomeFragment.newInstance()).commitAllowingStateLoss();

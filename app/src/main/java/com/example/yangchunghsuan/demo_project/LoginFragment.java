@@ -6,6 +6,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -145,7 +147,11 @@ public class LoginFragment extends Fragment {
                             if (task.isSuccessful()){
                                 Log.e("auth","login");
                                 Toast.makeText(view.getContext(),"登入",Toast.LENGTH_SHORT).show();
+                                FragmentManager fragmentManager = getFragmentManager();
+                                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                                fragmentTransaction.replace(R.id.frame,PersonalFragment.newInstance()).commitAllowingStateLoss();
 
+                                MainActivity.login = true;
                             }else{
                                 Log.e("auth","login fail");
                                 Toast.makeText(view.getContext(),"無法登入",Toast.LENGTH_SHORT).show();

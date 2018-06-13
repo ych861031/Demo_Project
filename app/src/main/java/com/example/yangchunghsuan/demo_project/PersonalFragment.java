@@ -77,7 +77,7 @@ public class PersonalFragment extends Fragment {
         //取得目前這個view的內容
         final View view = inflater.inflate(R.layout.fragment_personal, container, false);
         //從這個view找button
-        Button button = view.findViewById(R.id.button_personal);
+        Button button = view.findViewById(R.id.btn_logout);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
