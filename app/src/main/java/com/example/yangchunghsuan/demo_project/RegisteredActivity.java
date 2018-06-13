@@ -1,5 +1,7 @@
 package com.example.yangchunghsuan.demo_project;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -25,7 +27,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.StorageReference;
 
 public class RegisteredActivity extends AppCompatActivity {
-
+    Button btn_ok;
+    String msg;
     EditText email;
     EditText password;
     EditText username;
@@ -42,13 +45,22 @@ public class RegisteredActivity extends AppCompatActivity {
         setContentView(R.layout.activity_registered);
         setTitle("Registered");
 
+        msg = "歡迎使用本應用程式，\n請輸入您的基本資料!";
+        new AlertDialog.Builder(RegisteredActivity.this)
+                .setTitle("感謝您的加入!")
+                .setMessage(msg)
+                .setPositiveButton("確定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                }).show();
 
         email = findViewById(R.id.edt_mail);
         password = findViewById(R.id.edt_password);
         username = findViewById(R.id.edt_name);
         cellphome = findViewById(R.id.edt_smartphone);
-
-        Button button = findViewById(R.id.button_send_registered);
+        btn_ok = findViewById(R.id.button_send_registered);
 
         storageRef = database.getReference("user/0");
         storageRef.addChildEventListener(new ChildEventListener() {
@@ -81,9 +93,16 @@ public class RegisteredActivity extends AppCompatActivity {
 
 
 
-        button.setOnClickListener(new View.OnClickListener() {
+        btn_ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
+
+                        if(email.getText().toString().equals("") || password.getText().toString().equals("") ||username.getText().toString().equals("")||cellphome.getText().toString().equals("")) {
+                            Toast.makeText(getApplicationContext(),"所有資料都必須輸入!",Toast.LENGTH_LONG).show();
+                            return;
+                        }
 
                 if (users==-1){
                     return;
