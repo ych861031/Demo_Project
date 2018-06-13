@@ -133,6 +133,11 @@ public class LoginFragment extends Fragment {
         @Override
         public void onClick(View v) {
 
+            if(  password.getText().toString().equals("") ||account.getText().toString().equals("")) {
+                Toast.makeText(view.getContext(),"帳號與密碼都必須輸入!",Toast.LENGTH_LONG).show();
+                return;
+            }
+
             auth.signInWithEmailAndPassword(account.getText().toString(),password.getText().toString())
                     .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
@@ -140,12 +145,14 @@ public class LoginFragment extends Fragment {
                             if (task.isSuccessful()){
                                 Log.e("auth","login");
                                 Toast.makeText(view.getContext(),"登入",Toast.LENGTH_SHORT).show();
+
                             }else{
                                 Log.e("auth","login fail");
                                 Toast.makeText(view.getContext(),"無法登入",Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
+
         }
     };
 
