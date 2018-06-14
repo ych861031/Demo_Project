@@ -19,36 +19,26 @@
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <TextView
-                android:id="@+id/tv_account"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:text="帳號/Account:"
-                android:textSize="30sp" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0">
 
             <EditText
                 android:id="@+id/editText_account"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:ems="10"
+                android:hint="Email/使用者帳號"
                 android:inputType="textPersonName" />
-
-            <TextView
-                android:id="@+id/tv_password"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:text="密碼/Password:"
-                android:textSize="30sp" />
 
 
             <EditText
                 android:id="@+id/editText_password"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:ems="10"
+                android:hint="密碼"
                 android:inputType="textPassword" />
 
             <LinearLayout
@@ -61,13 +51,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="登入/Login" />
+                    android:background="@drawable/button_rounde"
+                    android:text="登入/Login"
+                    android:textColor="@android:color/black" />
 
                 <Button
                     android:id="@+id/btn_registered"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:background="@drawable/button_rounde2"
                     android:text="註冊/Registered" />
             </LinearLayout>
 

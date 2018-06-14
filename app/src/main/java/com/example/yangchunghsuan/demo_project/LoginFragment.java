@@ -146,7 +146,7 @@ public class LoginFragment extends Fragment {
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()){
                                 Log.e("auth","login");
-                                Toast.makeText(view.getContext(),"登入",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(view.getContext(),"登入成功",Toast.LENGTH_SHORT).show();
                                 FragmentManager fragmentManager = getFragmentManager();
                                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                                 fragmentTransaction.replace(R.id.frame,PersonalFragment.newInstance()).commitAllowingStateLoss();
@@ -154,7 +154,7 @@ public class LoginFragment extends Fragment {
                                 MainActivity.login = true;
                             }else{
                                 Log.e("auth","login fail");
-                                Toast.makeText(view.getContext(),"無法登入",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(view.getContext(),"帳號或密碼錯誤!",Toast.LENGTH_SHORT).show();
                             }
                         }
                     });

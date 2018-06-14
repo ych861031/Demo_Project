@@ -77,8 +77,8 @@ public class PersonalFragment extends Fragment {
         //取得目前這個view的內容
         final View view = inflater.inflate(R.layout.fragment_personal, container, false);
         //從這個view找button
-        Button button = view.findViewById(R.id.btn_logout);
-        button.setOnClickListener(new View.OnClickListener() {
+        Button btn_logout = view.findViewById(R.id.btn_logout);
+        btn_logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(view.getContext(),"Personal Page",Toast.LENGTH_SHORT).show();
