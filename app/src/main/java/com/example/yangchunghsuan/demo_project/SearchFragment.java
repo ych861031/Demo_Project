@@ -6,10 +6,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.MapView;
@@ -76,6 +79,8 @@ public class SearchFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+
     }
 
     @Override
@@ -85,16 +90,16 @@ public class SearchFragment extends Fragment {
         //取得目前這個view的內容
         final View view = inflater.inflate(R.layout.fragment_search, container, false);
         //從這個view找button
-        Button button = view.findViewById(R.id.button_search);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(view.getContext(),"Search Page",Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent();
-                intent.setClass(getContext(), MapActivity.class);
-                startActivity(intent);
-            }
-        });
+//        Button button = view.findViewById(R.id.button_search);
+//        button.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(view.getContext(),"Search Page",Toast.LENGTH_SHORT).show();
+//                Intent intent = new Intent();
+//                intent.setClass(getContext(), MapActivity.class);
+//                startActivity(intent);
+//            }
+//        });
         //回傳這個view讓MainActivity更改fragment
         return view;
     }
@@ -136,5 +141,10 @@ public class SearchFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
     }
 }

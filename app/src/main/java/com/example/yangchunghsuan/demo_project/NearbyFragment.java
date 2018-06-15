@@ -84,6 +84,8 @@ public class NearbyFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Toast.makeText(view.getContext(),"Nearby Page",Toast.LENGTH_SHORT).show();
+                getRestaurant get = new getRestaurant();
+                get.execute();
             }
         });
         //回傳這個view讓MainActivity更改fragment

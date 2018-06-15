@@ -2,6 +2,7 @@ package com.example.yangchunghsuan.demo_project;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -20,7 +22,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 
 /**
@@ -88,13 +89,13 @@ public class LoginFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
         auth = FirebaseAuth.getInstance();
-        FirebaseUser currentUser = auth.getCurrentUser();
 
     }
 
     View view;
     Button btn_registered;
     Button btn_login;
+    CheckBox checkBox;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -109,8 +110,17 @@ public class LoginFragment extends Fragment {
 
         account = view.findViewById(R.id.editText_account);
         password = view.findViewById(R.id.editText_password);
+        checkBox = view.findViewById(R.id.checkBox);
 
-
+        String email_get = view.getContext().getSharedPreferences("data",Context.MODE_PRIVATE)
+                .getString("account","");
+        String password_get = view.getContext().getSharedPreferences("data",Context.MODE_PRIVATE)
+                .getString("password","");
+        boolean check = view.getContext().getSharedPreferences("data",Context.MODE_PRIVATE)
+                .getBoolean("checkBox",false);
+        account.setText(email_get);
+        password.setText(password_get);
+        checkBox.setChecked(check);
         return view;
 
     }
@@ -127,7 +137,7 @@ public class LoginFragment extends Fragment {
     };
 
 
-
+    SharedPreferences sharedPreferences;
 
     private Button.OnClickListener listener_login = new Button.OnClickListener(){
 
@@ -150,8 +160,24 @@ public class LoginFragment extends Fragment {
                                 FragmentManager fragmentManager = getFragmentManager();
                                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                                 fragmentTransaction.replace(R.id.frame,PersonalFragment.newInstance()).commitAllowingStateLoss();
-
                                 MainActivity.login = true;
+
+                                if (checkBox.isChecked()){
+                                    sharedPreferences = view.getContext().getSharedPreferences("data",Context.MODE_PRIVATE);
+                                    sharedPreferences.edit()
+                                            .putString("account",account.getText().toString())
+                                            .putString("password",password.getText().toString())
+                                            .putBoolean("checkBox",true)
+                                            .apply();
+
+                                }else{
+                                    sharedPreferences = view.getContext().getSharedPreferences("data",Context.MODE_PRIVATE);
+                                    sharedPreferences.edit()
+                                            .putString("account","")
+                                            .putString("password","")
+                                            .putBoolean("checkBox",false)
+                                            .apply();
+                                }
                             }else{
                                 Log.e("auth","login fail");
                                 Toast.makeText(view.getContext(),"帳號或密碼錯誤!",Toast.LENGTH_SHORT).show();

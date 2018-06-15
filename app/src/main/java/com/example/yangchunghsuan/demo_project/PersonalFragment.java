@@ -5,6 +5,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +15,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -76,10 +80,13 @@ public class PersonalFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        MainActivity.toolbar.setTitle("Personal");
     }
 
 
     public String userName;
+    FirebaseAuth auth = FirebaseAuth.getInstance();
+    FirebaseDatabase storge = FirebaseDatabase.getInstance();
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -87,25 +94,21 @@ public class PersonalFragment extends Fragment {
         //取得目前這個view的內容
         final View view = inflater.inflate(R.layout.fragment_personal, container, false);
         //從這個view找button
-        Button btn_logout = view.findViewById(R.id.btn_logout);
-        btn_logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(view.getContext(),"Personal Page",Toast.LENGTH_SHORT).show();
-            }
-        });
 
-        FirebaseDatabase storge = FirebaseDatabase.getInstance();
-        DatabaseReference storageRef = storge.getReference("user/4/userName");
+
+
+        final String currntUserId = auth.getCurrentUser().getUid();
+        DatabaseReference storageRef = storge.getReference("user/" + currntUserId +"/userName");
         storageRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 try{
+                    Log.e("id",currntUserId);
                     userName = dataSnapshot.getValue().toString();
+                    Log.e("name",userName);
                     TextView tv_username;
                     tv_username =view.findViewById(R.id.tv_username);
                     tv_username.setText(userName+"您好");
-
                 }catch (Exception e){
 
                 }
@@ -116,9 +119,25 @@ public class PersonalFragment extends Fragment {
 
             }
         });
+
+        Button btn_logout = view.findViewById(R.id.btn_logout);
+        btn_logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                auth.signOut();
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.frame,LoginFragment.newInstance()).commitAllowingStateLoss();
+                MainActivity.toolbar.setTitle("Login");
+                MainActivity.login = false;
+            }
+        });
+
+
         //回傳這個view讓MainActivity更改fragment
         return view;
     }
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {

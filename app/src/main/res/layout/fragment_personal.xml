@@ -21,9 +21,9 @@
 
             <ImageView
                 android:id="@+id/iv_userphoto"
-                android:layout_width="0dp"
+                android:layout_width="75dp"
                 android:layout_height="75dp"
-                android:layout_weight="1"
+                android:layout_weight="0.01"
                 android:src="@drawable/user" />
 
             <TextView
@@ -31,7 +31,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="75dp"
                 android:layout_weight="1"
-                android:textSize="28sp" />
+                android:textSize="28sp"
+                android:gravity="center"
+                />
         </LinearLayout>
 
         <Button

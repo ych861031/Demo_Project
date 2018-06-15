@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -39,11 +40,18 @@ public class RegisteredActivity extends AppCompatActivity {
     Intent intent;
     int users = -1;
 
+
+    Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registered);
-        setTitle("Registered");
+        toolbar = findViewById(R.id.toolbar_rg);
+        setSupportActionBar(toolbar);
+        //原做法這裡無反應toolbar.setTitle(); 須經過一段時間後才可設定，若寫在onResume則可設定
+        getSupportActionBar().setTitle("註冊");//可以直接設定
+
+
 
         msg = "歡迎使用本應用程式，\n請輸入您的基本資料!";
         new AlertDialog.Builder(RegisteredActivity.this)
@@ -97,8 +105,6 @@ public class RegisteredActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-
-
                         if(email.getText().toString().equals("") || password.getText().toString().equals("") ||username.getText().toString().equals("")||cellphome.getText().toString().equals("")) {
                             Toast.makeText(getApplicationContext(),"所有資料都必須輸入!",Toast.LENGTH_LONG).show();
                             return;
@@ -114,19 +120,28 @@ public class RegisteredActivity extends AppCompatActivity {
                 auth.createUserWithEmailAndPassword(email.getText().toString(),password.getText().toString())
                         .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                             String folder = String.valueOf(users+1);
+
+
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()){
-                                    Toast.makeText(RegisteredActivity.this,"註冊成功",Toast.LENGTH_SHORT).show();
-                                    database.getReference("user/"+folder+"/email").setValue(email.getText().toString());
-                                    database.getReference("user/"+folder+"/cellphone").setValue(cellphome.getText().toString());
-                                    database.getReference("user/"+folder+"/userName").setValue(username.getText().toString());
+                                    auth.signInWithEmailAndPassword(email.getText().toString(),password.getText().toString())
+                                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                                    String id = auth.getUid();
+                                                    Log.e("id",id);
+                                                    Toast.makeText(RegisteredActivity.this,"註冊成功",Toast.LENGTH_SHORT).show();
+                                                    database.getReference("user/"+id+"/email").setValue(email.getText().toString());
+                                                    database.getReference("user/"+id+"/cellphone").setValue(cellphome.getText().toString());
+                                                    database.getReference("user/"+id+"/userName").setValue(username.getText().toString());
 
-                                    database.getReference("user/0/length").setValue(folder);
+                                                    database.getReference("user/0/length").setValue(folder);
 
-
-                                    setResult(RESULT_OK,intent);
-                                    finish();
+                                                    setResult(RESULT_OK,intent);
+                                                    finish();
+                                                }
+                                            });
                                 }else {
                                     Toast.makeText(RegisteredActivity.this,"註冊失敗",Toast.LENGTH_SHORT).show();
                                     setResult(RESULT_OK,intent);
@@ -141,6 +156,5 @@ public class RegisteredActivity extends AppCompatActivity {
             }
         });
     }
-
 
 }

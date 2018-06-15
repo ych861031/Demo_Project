@@ -4,6 +4,8 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -12,6 +14,11 @@ import java.net.URL;
 
 public class getRestaurant extends AsyncTask<Void,Void,Void>{
 
+
+    String[] name;
+    String[] placeId;
+    String[] rating;
+    String[] address;
 
     @Override
     protected Void doInBackground(Void... voids) {
@@ -27,6 +34,31 @@ public class getRestaurant extends AsyncTask<Void,Void,Void>{
                 sb.append(line);
                 line = bufferedReader.readLine();
             }
+
+            Log.e("get",sb.toString());
+
+            JSONObject jsonObject = new JSONObject(sb.toString());
+            JSONArray results = jsonObject.getJSONArray("results");
+//            JSONObject g = new JSONObject(results.get(0).toString());
+//            Log.e("g",g.get("name").toString());
+
+            name = new String[results.length()];
+            rating = new String[results.length()];
+            address = new String[results.length()];
+
+
+            for (int i=0;i<results.length();i++){
+
+                JSONObject content = new JSONObject(results.get(i).toString());
+                System.out.println(content.get("name").toString());
+                name[i] = content.get("name").toString();
+                rating[i] = content.get("rating").toString();
+                address[i] = content.get("vicinity").toString();
+//                Log.e("jsonArray",results.get(i).toString());
+            }
+
+
+
 
             Thread.sleep(500);
         }catch (Exception e){

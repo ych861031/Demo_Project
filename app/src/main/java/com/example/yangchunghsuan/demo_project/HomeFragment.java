@@ -78,9 +78,10 @@ public class HomeFragment extends Fragment {
 
     StorageReference storageRef;
     FirebaseStorage storage = FirebaseStorage.getInstance();
-
+    int i;
+    int bitmap_length;
     public static Bitmap[] bitmap = new Bitmap[100];
-
+    StorageReference sr;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,59 +89,74 @@ public class HomeFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-//        FirebaseStorage storage = FirebaseStorage.getInstance();
+
+
         storageRef = storage.getReference();
         final long ONE_MEGABYTE = 1024 * 1024 * 5;
-        StorageReference sr = storageRef.child("Home").child("1").child("1.jpg");
-        sr.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-            @Override
-            public void onSuccess(byte[] bytes) {
-                Log.e("!!!",bytes.toString());
-                bitmap[0] = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
-            }
-        });
 
-        sr = storageRef.child("Home").child("2").child("1.jpg");
-        sr.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-            @Override
-            public void onSuccess(byte[] bytes) {
-                Log.e("!!!",bytes.toString());
-                bitmap[1] = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
-            }
-        });
+//        for (i=1;i<=7;i++){
+//            storageRef = storage.getReference();
+//            sr = storageRef.child("Home").child(String.valueOf(i)).child("1.jpg");
+//            sr.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+//                @Override
+//                public void onSuccess(byte[] bytes) {
+//                    Log.e("!!!!",bytes.toString());
+//                    bitmap[bitmap_length++] = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
+//                }
+//            });
+//        }
 
-        sr = storageRef.child("Home").child("3").child("1.jpg");
-        sr.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-            @Override
-            public void onSuccess(byte[] bytes) {
-                Log.e("!!!",bytes.toString());
-                bitmap[2] = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
-            }
-        });
-        sr = storageRef.child("Home").child("4").child("1.jpg");
-        sr.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-            @Override
-            public void onSuccess(byte[] bytes) {
-                Log.e("!!!",bytes.toString());
-                bitmap[3] = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
-            }
-        });
-        sr = storageRef.child("Home").child("5").child("1.jpg");
-        sr.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-            @Override
-            public void onSuccess(byte[] bytes) {
-                Log.e("!!!",bytes.toString());
-                bitmap[4] = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
-            }
-        });
-        sr = storageRef.child("Home").child("6").child("1.jpg");
-        sr.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-            @Override
-            public void onSuccess(byte[] bytes) {
-                Log.e("!!!",bytes.toString());
-                bitmap[5] = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
-            }
-        });
+
+//        StorageReference sr = storageRef.child("Home").child("1").child("1.jpg");
+//        sr.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+//            @Override
+//            public void onSuccess(byte[] bytes) {
+//                Log.e("!!!",bytes.toString());
+//                bitmap[0] = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
+//            }
+//        });
+//
+//        sr = storageRef.child("Home").child("2").child("1.jpg");
+//        sr.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+//            @Override
+//            public void onSuccess(byte[] bytes) {
+//                Log.e("!!!",bytes.toString());
+//                bitmap[1] = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
+//            }
+//        });
+//
+//        sr = storageRef.child("Home").child("3").child("1.jpg");
+//        sr.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+//            @Override
+//            public void onSuccess(byte[] bytes) {
+//                Log.e("!!!",bytes.toString());
+//                bitmap[2] = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
+//            }
+//        });
+//        sr = storageRef.child("Home").child("4").child("1.jpg");
+//        sr.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+//            @Override
+//            public void onSuccess(byte[] bytes) {
+//                Log.e("!!!",bytes.toString());
+//                bitmap[3] = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
+//            }
+//        });
+//        sr = storageRef.child("Home").child("5").child("1.jpg");
+//        sr.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+//            @Override
+//            public void onSuccess(byte[] bytes) {
+//                Log.e("!!!",bytes.toString());
+//                bitmap[4] = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
+//            }
+//        });
+//        sr = storageRef.child("Home").child("6").child("1.jpg");
+//        sr.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+//            @Override
+//            public void onSuccess(byte[] bytes) {
+//                Log.e("!!!",bytes.toString());
+//                bitmap[5] = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
+//            }
+//        });
 
 
 

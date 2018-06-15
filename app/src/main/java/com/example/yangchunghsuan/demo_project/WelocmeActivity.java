@@ -45,7 +45,7 @@ public class WelocmeActivity extends Activity {
                 Intent intent = new Intent();
                 intent.setClass(WelocmeActivity.this,MainActivity.class);
                 startActivity(intent);
-//                finish();
+                finish();
             }
         },2000);
 
