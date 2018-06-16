@@ -13,7 +13,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -29,9 +34,9 @@ import java.util.List;
 
 public class home1 extends PageView{
 
-    private RecyclerView recyclerView;
-    private HomeAdapter homeAdapter;
-    private RecyclerView.LayoutManager layoutManager;
+    RecyclerView recyclerView;
+    HomeAdapter homeAdapter;
+    RecyclerView.LayoutManager layoutManager;
 
     private List<HomeInfo> items = new ArrayList<>();
     int loc_length = 0;
@@ -49,12 +54,14 @@ public class home1 extends PageView{
     DatabaseReference databaseRef;
     DatabaseReference databaseRefName;
     DatabaseReference databaseRefAddress;
+    DatabaseReference databaseReffolder;
     FirebaseStorage storage = FirebaseStorage.getInstance();
-    StorageReference storageRef;
-    StorageReference sr;
-
+    StorageReference storageRef = storage.getReference();
+    FirebaseAuth auth = FirebaseAuth.getInstance();
+    Thread thread;
 
     final long ONE_MEGABYTE = 1024 * 1024 * 10;
+
 
     public home1(Context context) {
         super(context);
@@ -62,6 +69,7 @@ public class home1 extends PageView{
         View v = LayoutInflater.from(context).inflate(R.layout.home_1,null);
         recyclerView = v.findViewById(R.id.recyclerview);
         recyclerView.setHasFixedSize(true);
+
 
         //取得homepage item個數
         databaseRef = database.getReference("homepage/0/length");
@@ -72,21 +80,28 @@ public class home1 extends PageView{
                 if ( get != null){
                     length = Integer.parseInt(get);
                     //取圖片
-                    for (i=1;i<=length;i++){
-                        storageRef = storage.getReference();
-                        sr = storageRef.child("Home").child(String.valueOf(i)).child("1.jpg");
-                        sr.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+
+                    for (i= 1;i<=length;i++){
+                        databaseReffolder = database.getReference("homepage/" + i + "/info/picture");
+                        databaseReffolder.addValueEventListener(new ValueEventListener() {
                             @Override
-                            public void onSuccess(byte[] bytes) {
-                                Log.e("!!!!",bytes.toString());
-                                bitmap[bitmap_length++] = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
+                            public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
+                                storageRef = storage.getReference(dataSnapshot.getValue().toString());
+
+                                storageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                                    @Override
+                                    public void onSuccess(byte[] bytes) {
+                                        String[] split = dataSnapshot.getRef().toString().split("/");
+                                        bitmap[Integer.parseInt(split[4])-1] = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
+                                    }
+                                });
+                            }
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
                             }
                         });
-                    }
 
-
-                    Log.e("length!!!!",String.valueOf(length));
-                    for (i= 1;i<=length;i++){
                         databaseRefName = database.getReference("homepage/" + i + "/info/name");
                         databaseRefName.addValueEventListener(new ValueEventListener() {
                             @Override
@@ -127,34 +142,18 @@ public class home1 extends PageView{
             }
         });
 
+
+
+
+
+
+
         if (address[0]!=null&&store_name[0]!=null&&bitmap[0]!=null){
             for (int i=0;address[i]!=null&&store_name[i]!=null&& bitmap[i]!=null;i++){
                 items.add(new HomeInfo(store_name[i],address[i],bitmap[i]));
             }
         }
 
-//        if (length!=0){
-//            Log.e("!!!","!!!!");
-//            for (int i=1;i<=length;i++){
-//                storageRef = storage.getReference("Home/"+i+"/1.jpg");
-//                storageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-//                    @Override
-//                    public void onSuccess(byte[] bytes) {
-//                        Log.e("!!!",String.valueOf(bitmap_length));
-//                        bitmap[bitmap_length++] = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
-//                    }
-//                });
-//            }
-//        }
-
-
-
-//        items.add(new HomeInfo(store_name[0],address[0],HomeFragment.bitmap[0]));
-//        items.add(new HomeInfo(store_name[1],address[1],HomeFragment.bitmap[1]));
-//        items.add(new HomeInfo(store_name[2],address[2],HomeFragment.bitmap[2]));
-//        items.add(new HomeInfo(store_name[3],address[3],HomeFragment.bitmap[3]));
-//        items.add(new HomeInfo(store_name[4],address[4],HomeFragment.bitmap[4]));
-//        items.add(new HomeInfo(store_name[5],address[5],HomeFragment.bitmap[5]));
 
 
 

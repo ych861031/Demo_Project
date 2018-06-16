@@ -77,6 +77,7 @@ LoginFragment.OnFragmentInteractionListener{
         searchView = findViewById(R.id.searchView);
 
 
+
         //get nearby api
 //        getRestaurant get = new getRestaurant();
 //        get.execute();
