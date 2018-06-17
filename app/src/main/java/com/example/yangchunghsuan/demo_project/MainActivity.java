@@ -17,6 +17,8 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnFr
 ,UploadFragment.OnFragmentInteractionListener,NearbyFragment.OnFragmentInteractionListener,PersonalFragment.OnFragmentInteractionListener,
 LoginFragment.OnFragmentInteractionListener{
 
+    public static String[] userName = new String[100];
+    public static String[] email = new String[100];
     public static boolean login = false;
     SearchView searchView;
 
@@ -29,7 +31,7 @@ LoginFragment.OnFragmentInteractionListener{
                 case R.id.navigation_home:
                     getSupportFragmentManager().beginTransaction().replace(R.id.frame,HomeFragment.newInstance()).commitAllowingStateLoss();
                     searchView.setVisibility(View.GONE);
-                    toolbar.setTitle("Home");
+                    toolbar.setTitle("官方推薦");
                     return true;
                 case R.id.navigation_search:
                     getSupportFragmentManager().beginTransaction().replace(R.id.frame,SearchFragment.newInstance()).commitAllowingStateLoss();

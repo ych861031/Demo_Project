@@ -149,18 +149,31 @@ public class HomeFragment extends Fragment {
     }
 
 
-//    public class home2 extends PageView{
-//
-//        public home2(Context context) {
-//            super(context);
-//            View view = LayoutInflater.from(context).inflate(R.layout.home_2,null);
-//            addView(view);
-//        }
-//    }
 
     private void initView(View view){
         viewPager = view.findViewById(R.id.pager);
         viewPager.setAdapter(new ViewPagerAdapter());
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                Log.e("position",String.valueOf(position));
+                if (position==0){
+                    MainActivity.toolbar.setTitle("官方推薦");
+                }else{
+                    MainActivity.toolbar.setTitle("使用者推薦");
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
     private void initData(View view){
@@ -186,13 +199,17 @@ public class HomeFragment extends Fragment {
         @Override
         public Object instantiateItem(@NonNull ViewGroup container, int position) {
             container.addView(pageList.get(position));
+
             return pageList.get(position);
         }
 
         @Override
         public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
             container.removeView((View)object);
+
         }
+
+
     }
 
 

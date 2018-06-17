@@ -95,15 +95,13 @@ public class SearchFragment extends Fragment {
 //    DatabaseReference databaseRef  = database.getReference("user");
 //    DatabaseReference databaseRef_length = database.getReference("user/0/length");
 //    JSONObject jsonObject ;
-//    String[] userName = new String[100];
-//    String[] email = new String[100];
-    ListView listView;
+//    ListView listView;
 //    ArrayList<HashMap<String,String>> list = new ArrayList<>();
 //    SimpleAdapter adapter;
 //    int userName_length = 0;
 //    int length = 0;
 //    int email_length = 0;
-    HashMap<String,String> item = new HashMap<>();
+
     get_Info get= new get_Info();
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -112,8 +110,6 @@ public class SearchFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
-
     }
 
     View view;
@@ -124,14 +120,14 @@ public class SearchFragment extends Fragment {
         // Inflate the layout for this fragment
         //取得目前這個view的內容
         view = inflater.inflate(R.layout.fragment_search, container, false);
-//        get.getInfo(view);
+        get.getInfo(view);
 
 //        Log.e("!!!",String.valueOf(get.length));
 
 
 //        adapter = new SimpleAdapter(view.getContext(),list,R.layout.search_user_row,
 //                new String[] {"userName","email"},new int[]{R.id.textView_userName,R.id.textView_email});
-//
+
 //        listView.setAdapter(adapter);
 
         return view;
