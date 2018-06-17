@@ -42,7 +42,6 @@ public class home1 extends PageView{
     int loc_length = 0;
     int name_length = 0;
     int length = 0;
-    int bitmap_length = 0;
     public static String a[] = new String[100];
     public static String[] address = new String[100];
     public static String[] store_name = new String[100];
@@ -57,8 +56,7 @@ public class home1 extends PageView{
     DatabaseReference databaseReffolder;
     FirebaseStorage storage = FirebaseStorage.getInstance();
     StorageReference storageRef = storage.getReference();
-    FirebaseAuth auth = FirebaseAuth.getInstance();
-    Thread thread;
+
 
     final long ONE_MEGABYTE = 1024 * 1024 * 10;
 
@@ -143,20 +141,11 @@ public class home1 extends PageView{
         });
 
 
-
-
-
-
-
         if (address[0]!=null&&store_name[0]!=null&&bitmap[0]!=null){
             for (int i=0;address[i]!=null&&store_name[i]!=null&& bitmap[i]!=null;i++){
                 items.add(new HomeInfo(store_name[i],address[i],bitmap[i]));
             }
         }
-
-
-
-
 
 
         layoutManager = new LinearLayoutManager(v.getContext());

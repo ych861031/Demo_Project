@@ -4,18 +4,36 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.MapView;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 
 /**
@@ -72,6 +90,21 @@ public class SearchFragment extends Fragment {
         return fragment;
     }
 
+
+//    FirebaseDatabase database = FirebaseDatabase.getInstance();
+//    DatabaseReference databaseRef  = database.getReference("user");
+//    DatabaseReference databaseRef_length = database.getReference("user/0/length");
+//    JSONObject jsonObject ;
+//    String[] userName = new String[100];
+//    String[] email = new String[100];
+    ListView listView;
+//    ArrayList<HashMap<String,String>> list = new ArrayList<>();
+//    SimpleAdapter adapter;
+//    int userName_length = 0;
+//    int length = 0;
+//    int email_length = 0;
+    HashMap<String,String> item = new HashMap<>();
+    get_Info get= new get_Info();
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,24 +116,24 @@ public class SearchFragment extends Fragment {
 
     }
 
+    View view;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         //取得目前這個view的內容
-        final View view = inflater.inflate(R.layout.fragment_search, container, false);
-        //從這個view找button
-//        Button button = view.findViewById(R.id.button_search);
-//        button.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Toast.makeText(view.getContext(),"Search Page",Toast.LENGTH_SHORT).show();
-//                Intent intent = new Intent();
-//                intent.setClass(getContext(), MapActivity.class);
-//                startActivity(intent);
-//            }
-//        });
-        //回傳這個view讓MainActivity更改fragment
+        view = inflater.inflate(R.layout.fragment_search, container, false);
+//        get.getInfo(view);
+
+//        Log.e("!!!",String.valueOf(get.length));
+
+
+//        adapter = new SimpleAdapter(view.getContext(),list,R.layout.search_user_row,
+//                new String[] {"userName","email"},new int[]{R.id.textView_userName,R.id.textView_email});
+//
+//        listView.setAdapter(adapter);
+
         return view;
     }
 
@@ -147,4 +180,5 @@ public class SearchFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
     }
+
 }

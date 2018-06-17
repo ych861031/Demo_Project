@@ -1,9 +1,15 @@
 package com.example.yangchunghsuan.demo_project;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,13 +27,14 @@ import android.widget.Toast;
  */
 public class NearbyFragment extends Fragment {
     public static NearbyFragment newInstance() {
-        
+
         Bundle args = new Bundle();
-        
+
         NearbyFragment fragment = new NearbyFragment();
         fragment.setArguments(args);
         return fragment;
     }
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -83,6 +90,14 @@ public class NearbyFragment extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                LocationManager mgr = (LocationManager) view.getContext().getSystemService(Context.LOCATION_SERVICE);
+                if (ActivityCompat.checkSelfPermission(view.getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(view.getContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//                    ActivityCompat.requestPermissions(view.getContext(),String permission[],int requsetCode);
+                    return;
+                }
+                mgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, locationListener);
+
+
                 Toast.makeText(view.getContext(),"Nearby Page",Toast.LENGTH_SHORT).show();
                 getRestaurant get = new getRestaurant();
                 get.execute();
@@ -98,23 +113,29 @@ public class NearbyFragment extends Fragment {
             mListener.onFragmentInteraction(uri);
         }
     }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+    private LocationListener locationListener  = new LocationListener() {
+        @Override
+        public void onLocationChanged(Location location) {
+            if (location!=null){
+                Log.e(String.valueOf(location.getLatitude()),String.valueOf(location.getLongitude()));
+            }
         }
-    }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+
+        }
+    };
 
     /**
      * This interface must be implemented by activities that contain this

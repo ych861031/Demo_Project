@@ -90,81 +90,8 @@ public class HomeFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-
-        storageRef = storage.getReference();
-        final long ONE_MEGABYTE = 1024 * 1024 * 5;
-
-//        for (i=1;i<=7;i++){
-//            storageRef = storage.getReference();
-//            sr = storageRef.child("Home").child(String.valueOf(i)).child("1.jpg");
-//            sr.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-//                @Override
-//                public void onSuccess(byte[] bytes) {
-//                    Log.e("!!!!",bytes.toString());
-//                    bitmap[bitmap_length++] = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
-//                }
-//            });
-//        }
-
-
-//        StorageReference sr = storageRef.child("Home").child("1").child("1.jpg");
-//        sr.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-//            @Override
-//            public void onSuccess(byte[] bytes) {
-//                Log.e("!!!",bytes.toString());
-//                bitmap[0] = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
-//            }
-//        });
-//
-//        sr = storageRef.child("Home").child("2").child("1.jpg");
-//        sr.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-//            @Override
-//            public void onSuccess(byte[] bytes) {
-//                Log.e("!!!",bytes.toString());
-//                bitmap[1] = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
-//            }
-//        });
-//
-//        sr = storageRef.child("Home").child("3").child("1.jpg");
-//        sr.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-//            @Override
-//            public void onSuccess(byte[] bytes) {
-//                Log.e("!!!",bytes.toString());
-//                bitmap[2] = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
-//            }
-//        });
-//        sr = storageRef.child("Home").child("4").child("1.jpg");
-//        sr.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-//            @Override
-//            public void onSuccess(byte[] bytes) {
-//                Log.e("!!!",bytes.toString());
-//                bitmap[3] = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
-//            }
-//        });
-//        sr = storageRef.child("Home").child("5").child("1.jpg");
-//        sr.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-//            @Override
-//            public void onSuccess(byte[] bytes) {
-//                Log.e("!!!",bytes.toString());
-//                bitmap[4] = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
-//            }
-//        });
-//        sr = storageRef.child("Home").child("6").child("1.jpg");
-//        sr.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-//            @Override
-//            public void onSuccess(byte[] bytes) {
-//                Log.e("!!!",bytes.toString());
-//                bitmap[5] = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
-//            }
-//        });
-
-
-
         Log.e("!!!","OnCreate");
     }
-
-
-
 
     private ViewPager viewPager;
     private List<PageView> pageList;
@@ -221,72 +148,15 @@ public class HomeFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-//    private RecyclerView recyclerView;
-//    private HomeAdapter homeAdapter;
-//    private RecyclerView.LayoutManager layoutManager;
+
+//    public class home2 extends PageView{
 //
-//    private List<HomeInfo> items;
-//
-//    public class home1 extends PageView{
-//
-//        public home1(Context context) {
+//        public home2(Context context) {
 //            super(context);
-//            View v = LayoutInflater.from(context).inflate(R.layout.home_1,null);
-//
-//
-//            recyclerView = v.findViewById(R.id.recyclerview);
-//            recyclerView.setHasFixedSize(true);
-//
-//            items = new ArrayList<>();
-//            items.add(new HomeInfo("1",bitmap[0]));
-//            items.add(new HomeInfo("2",bitmap[1]));
-//            items.add(new HomeInfo("3",bitmap[2]));
-//            items.add(new HomeInfo("4",bitmap[3]));
-//            items.add(new HomeInfo("5",bitmap[4]));
-//
-//
-//
-//            layoutManager = new LinearLayoutManager(v.getContext());
-//            recyclerView.setLayoutManager(layoutManager);
-//
-//            homeAdapter = new HomeAdapter(items,v.getContext()){
-//                @Override
-//                public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-//                    super.onBindViewHolder(holder, position);
-////                    HomeInfo homeInfo = new HomeInfo(items,bitmap[position-1]);
-//
-//                }
-//            };
-//            SpacesItemDecoration spacesItemDecoration = new SpacesItemDecoration(10);
-//
-//            recyclerView.addItemDecoration(spacesItemDecoration);
-//            recyclerView.setAdapter(homeAdapter);
-//            addView(v);
-//
+//            View view = LayoutInflater.from(context).inflate(R.layout.home_2,null);
+//            addView(view);
 //        }
 //    }
-
-//    public class SpacesItemDecoration extends RecyclerView.ItemDecoration{
-//        private int space;
-//
-//        public SpacesItemDecoration(int space){
-//            this.space = space;
-//        }
-//
-//        @Override
-//        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-//            outRect.top = space;
-//        }
-//    }
-
-    public class home2 extends PageView{
-
-        public home2(Context context) {
-            super(context);
-            View view = LayoutInflater.from(context).inflate(R.layout.home_2,null);
-            addView(view);
-        }
-    }
 
     private void initView(View view){
         viewPager = view.findViewById(R.id.pager);

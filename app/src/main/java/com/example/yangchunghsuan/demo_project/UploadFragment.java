@@ -9,13 +9,18 @@ import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.google.firebase.database.Transaction;
 
 
 /**
@@ -83,13 +88,14 @@ public class UploadFragment extends Fragment {
         }
     }
 
+    View view;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
         //取得目前這個view的內容
-        final View view = inflater.inflate(R.layout.fragment_upload, container, false);
+        view = inflater.inflate(R.layout.fragment_upload, container, false);
         //從這個view找button.img
         Button button = view.findViewById(R.id.bt1);
         Button uploadBtn = view.findViewById(R.id.bt2);
@@ -106,13 +112,22 @@ public class UploadFragment extends Fragment {
                 startActivityForResult(intent,PHOTO);
             }
         });
+
+
+        img.setImageBitmap(bitmap_get);
+
+
+
         //回傳這個view讓MainActivity更改fragment
         return view;
     }
 
+    public static Bitmap bitmap_get;
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction =  fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.frame,UploadFragment.newInstance()).commitAllowingStateLoss();
 
         if((requestCode ==CAMERA || requestCode ==PHOTO)&&data!=null){
             Uri uri = data.getData();
@@ -121,6 +136,8 @@ public class UploadFragment extends Fragment {
 
             try{
                 Bitmap bitmap = BitmapFactory.decodeStream(cr.openInputStream(uri));
+                bitmap_get = bitmap;
+                Log.e("bitmap",bitmap.toString());
                 Toast.makeText(getView().getContext(),"1.5",Toast.LENGTH_SHORT).show();
                 ScalePic(bitmap,mPhone.heightPixels);
 
@@ -153,9 +170,12 @@ public class UploadFragment extends Fragment {
             Bitmap mScaleBitmap = Bitmap.createBitmap(bitmap,0,0,
                     bitmap.getWidth(),bitmap.getHeight(),mMat,false);
             img.setImageBitmap(mScaleBitmap);
+            bitmap_get = mScaleBitmap;
         }else{
             img.setImageBitmap(bitmap);
+            bitmap_get = bitmap;
         }
+
     }
 
 

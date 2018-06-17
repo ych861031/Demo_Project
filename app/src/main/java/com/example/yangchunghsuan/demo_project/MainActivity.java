@@ -60,7 +60,7 @@ LoginFragment.OnFragmentInteractionListener{
         }
     };
 
-    BottomNavigationView navigation ;
+    public static BottomNavigationView navigation ;
     public static Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +76,10 @@ LoginFragment.OnFragmentInteractionListener{
         getSupportFragmentManager().beginTransaction().replace(R.id.frame,HomeFragment.newInstance()).commitAllowingStateLoss();
         searchView = findViewById(R.id.searchView);
 
-
+        getSupportFragmentManager().beginTransaction().replace(R.id.frame,SearchFragment.newInstance()).commitAllowingStateLoss();
+        setTitle("Login");
+        navigation.setSelectedItemId(R.id.navigation_personal);
+        getSupportFragmentManager().beginTransaction().replace(R.id.frame,LoginFragment.newInstance()).commitAllowingStateLoss();
 
         //get nearby api
 //        getRestaurant get = new getRestaurant();
@@ -88,16 +91,11 @@ LoginFragment.OnFragmentInteractionListener{
     @Override
     protected void onStart() {
         super.onStart();
-//        getSupportFragmentManager().beginTransaction().replace(R.id.frame,HomeFragment.newInstance()).commitAllowingStateLoss();
-
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        setTitle("Login");
-        navigation.setSelectedItemId(R.id.navigation_personal);
-        getSupportFragmentManager().beginTransaction().replace(R.id.frame,LoginFragment.newInstance()).commitAllowingStateLoss();
     }
 
 
@@ -107,8 +105,8 @@ LoginFragment.OnFragmentInteractionListener{
             return;
         }
         super.onActivityResult(requestCode, resultCode, data);
-        switch (resultCode){
-            case RESULT_OK:
+        switch (requestCode){
+            case 111:
                 Log.e("activity result","result ok!!!!!!!!!");
                 getSupportFragmentManager().beginTransaction().replace(R.id.frame,LoginFragment.newInstance()).commitAllowingStateLoss();
                 navigation.setSelectedItemId(R.id.navigation_personal);
