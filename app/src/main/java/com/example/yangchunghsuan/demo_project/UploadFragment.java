@@ -1,13 +1,20 @@
 package com.example.yangchunghsuan.demo_project;
 
+import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 
@@ -33,6 +40,11 @@ public class UploadFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    //用來判斷回傳值其代表動作是什麼
+    public final static int CAMERA = 66;
+    public final static int PHOTO = 99;
+    ImageView img;
+    DisplayMetrics mPhone;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -74,21 +86,79 @@ public class UploadFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         //取得目前這個view的內容
         final View view = inflater.inflate(R.layout.fragment_upload, container, false);
-        //從這個view找button
-        Button button = view.findViewById(R.id.button_uplaod);
+        //從這個view找button.img
+        Button button = view.findViewById(R.id.bt1);
+        Button uploadBtn = view.findViewById(R.id.bt2);
+        img = view.findViewById(R.id.img);
+
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(view.getContext(),"Upload Page test",Toast.LENGTH_SHORT).show();
+//                Toast.makeText(view.getContext(),"Upload Page test",Toast.LENGTH_SHORT).show();
 
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(intent,PHOTO);
             }
         });
         //回傳這個view讓MainActivity更改fragment
         return view;
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+
+        if((requestCode ==CAMERA || requestCode ==PHOTO)&&data!=null){
+            Uri uri = data.getData();
+            ContentResolver cr = getContext().getContentResolver();
+            Toast.makeText(getView().getContext(),"1",Toast.LENGTH_SHORT).show();
+
+            try{
+                Bitmap bitmap = BitmapFactory.decodeStream(cr.openInputStream(uri));
+                Toast.makeText(getView().getContext(),"1.5",Toast.LENGTH_SHORT).show();
+                ScalePic(bitmap,mPhone.heightPixels);
+
+                if(bitmap.getWidth()>bitmap.getHeight()){
+                    ScalePic(bitmap,mPhone.heightPixels);
+                    Toast.makeText(getView().getContext(),"2",Toast.LENGTH_SHORT).show();
+
+                }else{
+                    ScalePic(bitmap,mPhone.widthPixels);
+                    Toast.makeText(getView().getContext(),"3",Toast.LENGTH_SHORT).show();
+
+                }
+
+            }catch (Exception e){
+
+            }
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+    public void ScalePic(Bitmap bitmap, int phone){
+        float mScale = 1;
+
+        if(bitmap.getWidth()>phone){
+            mScale = (float)phone/(float)bitmap.getWidth();
+
+            Matrix mMat = new Matrix();
+            mMat.setScale(mScale,mScale);
+
+            Bitmap mScaleBitmap = Bitmap.createBitmap(bitmap,0,0,
+                    bitmap.getWidth(),bitmap.getHeight(),mMat,false);
+            img.setImageBitmap(mScaleBitmap);
+        }else{
+            img.setImageBitmap(bitmap);
+        }
+    }
+
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
