@@ -45,86 +45,92 @@ public class home2 extends PageView{
     int length = 0;
     DatabaseReference databaseReffolder;
 
-    final long ONE_MEGABYTE = 1024 * 1024 * 10;
+    final long ONE_MEGABYTE = 1024 * 1024 * 1024 ;
     public home2(Context context) {
         super(context);
         View view = LayoutInflater.from(context).inflate(R.layout.home_2,null);
         recyclerView = view.findViewById(R.id.recyclerview2);
 
-        databaseReference = database.getReference("userpage/0/length");
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        Thread thread = new Thread(new Runnable() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.e("length2",dataSnapshot.getValue().toString());
-                get =  dataSnapshot.getValue().toString();
-                if (get!=null){
-                    length = Integer.parseInt(get);
-                    for (i= 1;i<=length;i++){
-                        databaseReffolder = database.getReference("userpage/" + i + "/info/picture");
-                        databaseReffolder.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
-                                storageRef = storage.getReference(dataSnapshot.getValue().toString());
-
-                                storageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            public void run() {
+                databaseReference = database.getReference("userpage/0/length");
+                databaseReference.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        Log.e("length2",dataSnapshot.getValue().toString());
+                        get =  dataSnapshot.getValue().toString();
+                        if (get!=null){
+                            length = Integer.parseInt(get);
+                            for (i= 1;i<=length;i++){
+                                databaseReffolder = database.getReference("userpage/" + i + "/info/picture");
+                                databaseReffolder.addValueEventListener(new ValueEventListener() {
                                     @Override
-                                    public void onSuccess(byte[] bytes) {
-                                        String[] split = dataSnapshot.getRef().toString().split("/");
-                                        bitmaps[Integer.parseInt(split[4])-1] = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
+                                    public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
+                                        storageRef = storage.getReference(dataSnapshot.getValue().toString());
+
+                                        storageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                                            @Override
+                                            public void onSuccess(byte[] bytes) {
+                                                String[] split = dataSnapshot.getRef().toString().split("/");
+                                                bitmaps[Integer.parseInt(split[4])-1] = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
+                                            }
+                                        });
+                                    }
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
                                     }
                                 });
-                            }
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                databaseRefName = database.getReference("userpage/" + i + "/info/name");
+                                databaseRefName.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        Log.e("get value!!!",dataSnapshot.getValue().toString());
+                                        get = dataSnapshot.getValue().toString();
+                                        store_name[name_length++] = get;
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+                                });
+                                databaseRefAddress = database.getReference("userpage/" + i + "/info/address");
+                                databaseRefAddress.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        Log.e("get value",dataSnapshot.getValue().toString());
+                                        get = dataSnapshot.getValue().toString();
+                                        address[loc_length++] = get;
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+                                });
+
 
                             }
-                        });
+                        }
+                    }
 
-                        databaseRefName = database.getReference("userpage/" + i + "/info/name");
-                        databaseRefName.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                Log.e("get value!!!",dataSnapshot.getValue().toString());
-                                get = dataSnapshot.getValue().toString();
-                                store_name[name_length++] = get;
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                            }
-                        });
-                        databaseRefAddress = database.getReference("userpage/" + i + "/info/address");
-                        databaseRefAddress.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                Log.e("get value",dataSnapshot.getValue().toString());
-                                get = dataSnapshot.getValue().toString();
-                                address[loc_length++] = get;
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                            }
-                        });
-
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
 
                     }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                });
             }
         });
+        thread.start();
 
 
-//        items.add(new HomeInfo("test","testtsts",null));
-        if (address[0]!=null){
-            Log.e("in","!!!!");
-            for (int i =0;address[i]!=null;i++){
+
+        if (address[0]!=null&&store_name[0]!=null&&bitmaps[0]!=null){
+            for (int i =0;address[0]!=null&&store_name[0]!=null&&bitmaps[i]!=null;i++){
+                Log.e("name",store_name[i]);
                 items.add(new HomeInfo(store_name[i],address[i],bitmaps[i]));
             }
         }

@@ -39,8 +39,6 @@ public class RegisteredActivity extends AppCompatActivity {
     DatabaseReference storageRef;
     Intent intent;
     int users = -1;
-
-
     Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,7 +133,7 @@ public class RegisteredActivity extends AppCompatActivity {
                                                     database.getReference("user/"+id+"/email").setValue(email.getText().toString());
                                                     database.getReference("user/"+id+"/cellphone").setValue(cellphome.getText().toString());
                                                     database.getReference("user/"+id+"/userName").setValue(username.getText().toString());
-
+                                                    database.getReference("user/"+id+"/pictureArray").setValue(0);
                                                     database.getReference("user/0/length").setValue(folder);
 
                                                     setResult(RESULT_OK,intent);

@@ -39,6 +39,7 @@ public class get_Info {
                         try {
                             jsonObject = new JSONObject(dataSnapshot.getValue().toString());
                             MainActivity.userName[length]  = jsonObject.get("userName").toString();
+                            Log.e("userName",MainActivity.userName[length]);
                             MainActivity.email[length] = jsonObject.get("email").toString();
                             length++;
                         } catch (JSONException e) {

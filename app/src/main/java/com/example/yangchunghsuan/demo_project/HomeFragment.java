@@ -103,9 +103,11 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         Log.e("!!!","createView");
+
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         initData(view);
         initView(view);
+
         return view;
     }
 
@@ -152,28 +154,34 @@ public class HomeFragment extends Fragment {
 
     private void initView(View view){
         viewPager = view.findViewById(R.id.pager);
-        viewPager.setAdapter(new ViewPagerAdapter());
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        Thread thread = new Thread(new Runnable() {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            public void run() {
+                viewPager.setAdapter(new ViewPagerAdapter());
+                viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                    @Override
+                    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-            }
+                    }
 
-            @Override
-            public void onPageSelected(int position) {
-                Log.e("position",String.valueOf(position));
-                if (position==0){
-                    MainActivity.toolbar.setTitle("官方推薦");
-                }else{
-                    MainActivity.toolbar.setTitle("使用者推薦");
-                }
-            }
+                    @Override
+                    public void onPageSelected(int position) {
+                        Log.e("position",String.valueOf(position));
+                        if (position==0){
+                            MainActivity.toolbar.setTitle("官方推薦");
+                        }else{
+                            MainActivity.toolbar.setTitle("使用者推薦");
+                        }
+                    }
 
-            @Override
-            public void onPageScrollStateChanged(int state) {
+                    @Override
+                    public void onPageScrollStateChanged(int state) {
 
+                    }
+                });
             }
         });
+        thread.start();
     }
 
     private void initData(View view){

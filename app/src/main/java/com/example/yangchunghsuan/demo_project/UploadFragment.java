@@ -1,13 +1,17 @@
 package com.example.yangchunghsuan.demo_project;
 
+import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -17,10 +21,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Transaction;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.ByteArrayOutputStream;
 
 
 /**
@@ -49,7 +67,7 @@ public class UploadFragment extends Fragment {
     public final static int CAMERA = 66;
     public final static int PHOTO = 99;
     ImageView img;
-    public DisplayMetrics mPhone;
+    DisplayMetrics mPhone;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -89,33 +107,139 @@ public class UploadFragment extends Fragment {
     }
 
     View view;
+    FirebaseStorage storage = FirebaseStorage.getInstance();
+    StorageReference storageRef;
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference databaseRef = database.getReference("userpage/0/length");
+    Button uploadBtn;
+    int folder;
+    String id;
+    boolean check =true;
+    boolean check_userPagelength=true;
+    EditText editText_storeName;
+    EditText editText_address;
+    EditText editText_comment;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        // Inflate the layout for this fragment
         //取得目前這個view的內容
         view = inflater.inflate(R.layout.fragment_upload, container, false);
         //從這個view找button.img
+        editText_storeName = view.findViewById(R.id.editText_storeName);
+        editText_address = view.findViewById(R.id.editText_address);
+        editText_comment = view.findViewById(R.id.editText＿comment);
+
+
         Button button = view.findViewById(R.id.bt1);
-        Button uploadBtn = view.findViewById(R.id.bt2);
+        uploadBtn = view.findViewById(R.id.bt2);
         img = view.findViewById(R.id.img);
+        img.setImageResource(R.drawable.album);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Toast.makeText(view.getContext(),"Upload Page test",Toast.LENGTH_SHORT).show();
-
                 Intent intent = new Intent();
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 startActivityForResult(intent,PHOTO);
             }
         });
+        try{
+            if (bitmap_get!=null){
+                img.setImageBitmap(bitmap_get);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
 
-        img.setImageBitmap(bitmap_get);
-//        ScalePic(bitmap_get,mPhone.widthPixels);
+        databaseRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String get = dataSnapshot.getValue().toString();
+                if (get!=null){
+                    if (check_userPagelength){
+                        folder = Integer.parseInt(get)+1;
+                        check_userPagelength = false;
+                    }
+                    storageRef = storage.getReference("Users/"+folder+"/1.jpg");
+                    uploadBtn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (MainActivity.login){
+                                Log.e("id",auth.getUid());
+                                id = auth.getUid();
+                                img.setDrawingCacheEnabled(true);
+                                img.buildDrawingCache();
+                                Bitmap bitmapUpload = ((BitmapDrawable)img.getDrawable()).getBitmap();
+                                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                                bitmapUpload.compress(Bitmap.CompressFormat.JPEG,10,baos);
+                                byte[] data = baos.toByteArray();
+                                UploadTask uploadTask = storageRef.putBytes(data);
+                                uploadTask.addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.e("listner","fail");
+                                    }
+                                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                    @Override
+                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                        Log.e("listner","success");
+                                        database.getReference("userpage/0/length").setValue(folder);
+                                        database.getReference("userpage/"+folder+"/info/address").setValue("test");
+                                        database.getReference("userpage/"+folder+"/info/name").setValue("test");
+                                        database.getReference("userpage/"+folder+"/info/picture").setValue("Users/"+folder+"/1.jpg");
+                                        database.getReference("userpage/"+folder+"/info/name").setValue(editText_storeName.getText().toString());
+                                        database.getReference("userpage/"+folder+"/info/address").setValue(editText_address.getText().toString());
+                                        database.getReference("userpage/"+folder+"/info/comment").setValue(editText_comment.getText().toString());
+                                        databaseRef = database.getReference("user/"+id+"/pictureArray/length");
+                                        databaseRef.addValueEventListener(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                //防止重複寫入
+                                                if (check){
+                                                    String get = dataSnapshot.getValue().toString();
+                                                    int array_length = Integer.parseInt(get)+1;
+                                                    database.getReference("user/"+id+"/pictureArray/length").setValue(array_length);
+                                                    database.getReference("pictureArray/"+id+"/"+array_length).setValue("Users/"+folder+"/1.jpg");
+                                                    check = false;
+                                                }
+
+
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                            }
+                                        });
+
+                                    }
+                                });
+                                Toast.makeText(view.getContext(),"upload",Toast.LENGTH_SHORT).show();
+                            }else {
+                                new AlertDialog.Builder(view.getContext())
+                                        .setTitle("注意")
+                                        .setMessage("必須登入才可上傳")
+                                        .setPositiveButton("確定", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+
+                                            }
+                                        }).show();
+                            }
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
 
 
         //回傳這個view讓MainActivity更改fragment
@@ -123,38 +247,58 @@ public class UploadFragment extends Fragment {
     }
 
     public static Bitmap bitmap_get;
+    ContentResolver cr;
+    Uri uri;
+    FirebaseAuth auth = FirebaseAuth.getInstance();
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction =  fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame,UploadFragment.newInstance()).commitAllowingStateLoss();
+        try{
+            //為了早點拿到圖片
+            uri = data.getData();
+            cr = getContext().getContentResolver();
+            Bitmap bitmap = BitmapFactory.decodeStream(cr.openInputStream(uri));
+            bitmap_get = bitmap;
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
 
         if((requestCode ==CAMERA || requestCode ==PHOTO)&&data!=null){
-            Uri uri = data.getData();
-            ContentResolver cr = getActivity().getContentResolver();
+            uri = data.getData();
+            cr = getContext().getContentResolver();
             Toast.makeText(getView().getContext(),"1",Toast.LENGTH_SHORT).show();
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try{
+                        Bitmap bitmap = BitmapFactory.decodeStream(cr.openInputStream(uri));
+                        bitmap_get = bitmap;
 
-            try{
-                Bitmap bitmap = BitmapFactory.decodeStream(cr.openInputStream(uri));
-                bitmap_get = bitmap;
-                Log.e("bitmap",bitmap.toString());
-//                Toast.makeText(getView().getContext(),"1.5",Toast.LENGTH_SHORT).show();
-//                img.setImageBitmap(bitmap);
 
-//                if(bitmap.getWidth()>bitmap.getHeight()){
-//                    ScalePic(bitmap,mPhone.heightPixels);
-//                    Toast.makeText(getView().getContext(),"2",Toast.LENGTH_SHORT).show();
-//
-//                }else{
-//                    ScalePic(bitmap,mPhone.widthPixels);
-//                    Toast.makeText(getView().getContext(),"3",Toast.LENGTH_SHORT).show();
-//
-//                }
+                        Log.e("bitmap",bitmap.toString());
+                        Toast.makeText(getView().getContext(),"1.5",Toast.LENGTH_SHORT).show();
+                        ScalePic(bitmap,mPhone.heightPixels);
 
-            }catch (Exception e){
+                        if(bitmap.getWidth()>bitmap.getHeight()){
+                            ScalePic(bitmap,mPhone.heightPixels);
+                            Toast.makeText(getView().getContext(),"2",Toast.LENGTH_SHORT).show();
 
-//                Toast.makeText(getView().getContext(),"2",Toast.LENGTH_SHORT).show();
-            }
+                        }else{
+                            ScalePic(bitmap,mPhone.widthPixels);
+                            Toast.makeText(getView().getContext(),"3",Toast.LENGTH_SHORT).show();
+
+                        }
+
+                    }catch (Exception e){
+
+                    }
+                }
+            });
+            thread.start();
         }
 
         super.onActivityResult(requestCode, resultCode, data);
@@ -171,11 +315,13 @@ public class UploadFragment extends Fragment {
             Bitmap mScaleBitmap = Bitmap.createBitmap(bitmap,0,0,
                     bitmap.getWidth(),bitmap.getHeight(),mMat,false);
             img.setImageBitmap(mScaleBitmap);
+
             bitmap_get = mScaleBitmap;
-            img.setImageBitmap(bitmap_get);
+
         }else{
-            bitmap_get = bitmap;
+
             img.setImageBitmap(bitmap);
+            bitmap_get = bitmap;
         }
 
     }
