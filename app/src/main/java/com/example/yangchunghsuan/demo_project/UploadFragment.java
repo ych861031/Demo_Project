@@ -49,7 +49,7 @@ public class UploadFragment extends Fragment {
     public final static int CAMERA = 66;
     public final static int PHOTO = 99;
     ImageView img;
-    DisplayMetrics mPhone;
+    public DisplayMetrics mPhone;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -115,7 +115,7 @@ public class UploadFragment extends Fragment {
 
 
         img.setImageBitmap(bitmap_get);
-
+//        ScalePic(bitmap_get,mPhone.widthPixels);
 
 
         //回傳這個view讓MainActivity更改fragment
@@ -131,28 +131,29 @@ public class UploadFragment extends Fragment {
 
         if((requestCode ==CAMERA || requestCode ==PHOTO)&&data!=null){
             Uri uri = data.getData();
-            ContentResolver cr = getContext().getContentResolver();
+            ContentResolver cr = getActivity().getContentResolver();
             Toast.makeText(getView().getContext(),"1",Toast.LENGTH_SHORT).show();
 
             try{
                 Bitmap bitmap = BitmapFactory.decodeStream(cr.openInputStream(uri));
                 bitmap_get = bitmap;
                 Log.e("bitmap",bitmap.toString());
-                Toast.makeText(getView().getContext(),"1.5",Toast.LENGTH_SHORT).show();
-                ScalePic(bitmap,mPhone.heightPixels);
+//                Toast.makeText(getView().getContext(),"1.5",Toast.LENGTH_SHORT).show();
+//                img.setImageBitmap(bitmap);
 
-                if(bitmap.getWidth()>bitmap.getHeight()){
-                    ScalePic(bitmap,mPhone.heightPixels);
-                    Toast.makeText(getView().getContext(),"2",Toast.LENGTH_SHORT).show();
-
-                }else{
-                    ScalePic(bitmap,mPhone.widthPixels);
-                    Toast.makeText(getView().getContext(),"3",Toast.LENGTH_SHORT).show();
-
-                }
+//                if(bitmap.getWidth()>bitmap.getHeight()){
+//                    ScalePic(bitmap,mPhone.heightPixels);
+//                    Toast.makeText(getView().getContext(),"2",Toast.LENGTH_SHORT).show();
+//
+//                }else{
+//                    ScalePic(bitmap,mPhone.widthPixels);
+//                    Toast.makeText(getView().getContext(),"3",Toast.LENGTH_SHORT).show();
+//
+//                }
 
             }catch (Exception e){
 
+//                Toast.makeText(getView().getContext(),"2",Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -171,9 +172,10 @@ public class UploadFragment extends Fragment {
                     bitmap.getWidth(),bitmap.getHeight(),mMat,false);
             img.setImageBitmap(mScaleBitmap);
             bitmap_get = mScaleBitmap;
+            img.setImageBitmap(bitmap_get);
         }else{
-            img.setImageBitmap(bitmap);
             bitmap_get = bitmap;
+            img.setImageBitmap(bitmap);
         }
 
     }
