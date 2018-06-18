@@ -91,17 +91,6 @@ public class SearchFragment extends Fragment {
     }
 
 
-//    FirebaseDatabase database = FirebaseDatabase.getInstance();
-//    DatabaseReference databaseRef  = database.getReference("user");
-//    DatabaseReference databaseRef_length = database.getReference("user/0/length");
-//    JSONObject jsonObject ;
-//    ListView listView;
-//    ArrayList<HashMap<String,String>> list = new ArrayList<>();
-//    SimpleAdapter adapter;
-//    int userName_length = 0;
-//    int length = 0;
-//    int email_length = 0;
-
     get_Info get= new get_Info();
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -121,14 +110,6 @@ public class SearchFragment extends Fragment {
         //取得目前這個view的內容
         view = inflater.inflate(R.layout.fragment_search, container, false);
         get.getInfo(view);
-
-//        Log.e("!!!",String.valueOf(get.length));
-
-
-//        adapter = new SimpleAdapter(view.getContext(),list,R.layout.search_user_row,
-//                new String[] {"userName","email"},new int[]{R.id.textView_userName,R.id.textView_email});
-
-//        listView.setAdapter(adapter);
 
         return view;
     }

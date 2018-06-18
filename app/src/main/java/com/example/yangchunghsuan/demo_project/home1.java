@@ -128,8 +128,6 @@ public class home1 extends PageView{
 
                             }
                         });
-
-
                     }
                 }
             }
