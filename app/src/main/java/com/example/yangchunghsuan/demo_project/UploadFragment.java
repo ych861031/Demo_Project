@@ -2,6 +2,7 @@ package com.example.yangchunghsuan.demo_project;
 
 import android.app.AlertDialog;
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -120,7 +122,7 @@ public class UploadFragment extends Fragment {
     EditText editText_address;
     EditText editText_comment;
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         //取得目前這個view的內容
@@ -132,6 +134,7 @@ public class UploadFragment extends Fragment {
 
 
         Button button = view.findViewById(R.id.bt1);
+        Button CaBtn = view.findViewById(R.id.cBt3);
         uploadBtn = view.findViewById(R.id.bt2);
         img = view.findViewById(R.id.img);
         img.setImageResource(R.drawable.album);
@@ -145,6 +148,20 @@ public class UploadFragment extends Fragment {
                 startActivityForResult(intent,PHOTO);
             }
         });
+
+        CaBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ContentValues values = new ContentValues();
+                values.put(MediaStore.Images.Media.MIME_TYPE,"image/jpeg");
+                Uri uri = getContext().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,values);
+
+                Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+                intent.putExtra(MediaStore.EXTRA_OUTPUT,uri.getPath());
+                startActivityForResult(intent,CAMERA);
+            }
+        });
+
         try{
             if (bitmap_get!=null){
                 img.setImageBitmap(bitmap_get);
@@ -259,7 +276,10 @@ public class UploadFragment extends Fragment {
             //為了早點拿到圖片
             uri = data.getData();
             cr = getContext().getContentResolver();
-            Bitmap bitmap = BitmapFactory.decodeStream(cr.openInputStream(uri));
+            BitmapFactory.Options mOption = new BitmapFactory.Options();
+            //Size=2為將原始圖片縮小1/2，Size=4為1/4，以此類推
+            mOption.inSampleSize = 8;
+            Bitmap bitmap = BitmapFactory.decodeStream(cr.openInputStream(uri),null,mOption);
             bitmap_get = bitmap;
 
         }catch (Exception e){
@@ -280,18 +300,18 @@ public class UploadFragment extends Fragment {
 
 
                         Log.e("bitmap",bitmap.toString());
-                        Toast.makeText(getView().getContext(),"1.5",Toast.LENGTH_SHORT).show();
-                        ScalePic(bitmap,mPhone.heightPixels);
+//                        Toast.makeText(getView().getContext(),"1.5",Toast.LENGTH_SHORT).show();
+//                        ScalePic(bitmap,mPhone.heightPixels);
 
-                        if(bitmap.getWidth()>bitmap.getHeight()){
-                            ScalePic(bitmap,mPhone.heightPixels);
-                            Toast.makeText(getView().getContext(),"2",Toast.LENGTH_SHORT).show();
-
-                        }else{
-                            ScalePic(bitmap,mPhone.widthPixels);
-                            Toast.makeText(getView().getContext(),"3",Toast.LENGTH_SHORT).show();
-
-                        }
+//                        if(bitmap.getWidth()>bitmap.getHeight()){
+//                            ScalePic(bitmap,mPhone.heightPixels);
+//                            Toast.makeText(getView().getContext(),"2",Toast.LENGTH_SHORT).show();
+//
+//                        }else{
+//                            ScalePic(bitmap,mPhone.widthPixels);
+//                            Toast.makeText(getView().getContext(),"3",Toast.LENGTH_SHORT).show();
+//
+//                        }
 
                     }catch (Exception e){
 

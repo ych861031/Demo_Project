@@ -35,7 +35,13 @@
                     android:id="@+id/bt1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="PICTURE" />
+                    android:text="PHOTO" />
+
+                <Button
+                    android:id="@+id/cBt3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="CAMERA" />
 
                 <EditText
                     android:id="@+id/editText_storeName"
