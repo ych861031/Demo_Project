@@ -37,8 +37,6 @@ public class getRestaurant extends AsyncTask<Void,Void,Void>{
                 line = bufferedReader.readLine();
             }
 
-//            Log.e("get",sb.toString());
-
             JSONObject jsonObject = new JSONObject(sb.toString());
             JSONArray results = jsonObject.getJSONArray("results");
 
@@ -73,10 +71,6 @@ public class getRestaurant extends AsyncTask<Void,Void,Void>{
                 }catch (Exception e){
                     e.printStackTrace();
                 }
-
-
-
-//                Log.e("jsonArray",results.get(i).toString());
             }
 
 

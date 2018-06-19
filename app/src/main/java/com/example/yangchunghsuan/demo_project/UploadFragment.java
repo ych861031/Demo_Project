@@ -278,51 +278,16 @@ public class UploadFragment extends Fragment {
             cr = getContext().getContentResolver();
             BitmapFactory.Options mOption = new BitmapFactory.Options();
             //Size=2為將原始圖片縮小1/2，Size=4為1/4，以此類推
-            mOption.inSampleSize = 8;
-            Bitmap bitmap = BitmapFactory.decodeStream(cr.openInputStream(uri),null,mOption);
-            bitmap_get = bitmap;
+            mOption.inSampleSize = 2;
+            bitmap_get = BitmapFactory.decodeStream(cr.openInputStream(uri),null,mOption);
 
         }catch (Exception e){
             e.printStackTrace();
         }
 
-
-        if((requestCode ==CAMERA || requestCode ==PHOTO)&&data!=null){
-            uri = data.getData();
-            cr = getContext().getContentResolver();
-            Toast.makeText(getView().getContext(),"1",Toast.LENGTH_SHORT).show();
-            Thread thread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try{
-                        Bitmap bitmap = BitmapFactory.decodeStream(cr.openInputStream(uri));
-                        bitmap_get = bitmap;
-
-
-                        Log.e("bitmap",bitmap.toString());
-//                        Toast.makeText(getView().getContext(),"1.5",Toast.LENGTH_SHORT).show();
-//                        ScalePic(bitmap,mPhone.heightPixels);
-
-//                        if(bitmap.getWidth()>bitmap.getHeight()){
-//                            ScalePic(bitmap,mPhone.heightPixels);
-//                            Toast.makeText(getView().getContext(),"2",Toast.LENGTH_SHORT).show();
-//
-//                        }else{
-//                            ScalePic(bitmap,mPhone.widthPixels);
-//                            Toast.makeText(getView().getContext(),"3",Toast.LENGTH_SHORT).show();
-//
-//                        }
-
-                    }catch (Exception e){
-
-                    }
-                }
-            });
-            thread.start();
-        }
-
         super.onActivityResult(requestCode, resultCode, data);
     }
+
     public void ScalePic(Bitmap bitmap, int phone){
         float mScale = 1;
 

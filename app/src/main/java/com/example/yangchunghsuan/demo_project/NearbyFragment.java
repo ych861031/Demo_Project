@@ -128,6 +128,8 @@ public class NearbyFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 //                Toast.makeText(view.getContext(),MainActivity.address[position],Toast.LENGTH_SHORT).show();
 //                Uri uri = Uri.parse("geo:"+MainActivity.address[position]+"?z=19");
+                Log.e("gps",MainActivity.address[position]);
+                Log.e("position",String.valueOf(position));
                 Uri uri = Uri.parse("google.navigation:q="+MainActivity.address[position]);
                 Intent intent = new Intent(Intent.ACTION_VIEW,uri);
                 startActivity(intent);

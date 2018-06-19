@@ -1,9 +1,16 @@
 package com.example.yangchunghsuan.demo_project;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
@@ -19,6 +26,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class get_Info {
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -26,6 +34,8 @@ public class get_Info {
     private JSONObject jsonObject ;
     private ArrayList<HashMap<String,String>> list = new ArrayList<>();
     private int length = 0;
+    ListView listView;
+
 
     public void getInfo(View view){
         Thread thread = new Thread(new Runnable() {
@@ -83,9 +93,15 @@ public class get_Info {
             }
         }
 
+
         SimpleAdapter adapter = new SimpleAdapter(view.getContext(), list, R.layout.search_user_row, new String[]{"userName", "email"}, new int[]{R.id.textView_userName, R.id.textView_email});
-        ListView listView = view.findViewById(R.id.user_list);
+        listView = view.findViewById(R.id.user_list);
         listView.setAdapter(adapter);
 
+        listView.setTextFilterEnabled(true);
+
+
     }
+
+
 }

@@ -1,8 +1,12 @@
 package com.example.yangchunghsuan.demo_project;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -19,9 +23,19 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import java.util.Calendar;
 
 
 /**
@@ -135,9 +149,16 @@ public class LoginFragment extends Fragment {
 
        }
     };
-
+    final long ONE_MEGABYTE = 1024 * 1024 * 10;
+    int bitmap_length = 0;
 
     SharedPreferences sharedPreferences;
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+    DatabaseReference databaseRef = database.getReference();
+    StorageReference storageRef = firebaseStorage.getReference();
+
+    int get;
 
     private Button.OnClickListener listener_login = new Button.OnClickListener(){
 
@@ -157,10 +178,28 @@ public class LoginFragment extends Fragment {
                             if (task.isSuccessful()){
                                 Log.e("auth","login");
                                 Toast.makeText(view.getContext(),"登入成功",Toast.LENGTH_SHORT).show();
-                                FragmentManager fragmentManager = getFragmentManager();
-                                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                                fragmentTransaction.replace(R.id.frame,PersonalFragment.newInstance()).commitAllowingStateLoss();
                                 MainActivity.login = true;
+
+                                try{
+                                    FragmentManager fragmentManager = getFragmentManager();
+                                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                                    fragmentTransaction.replace(R.id.frame,PersonalFragment.newInstance()).commitAllowingStateLoss();
+
+                                    Calendar c = Calendar.getInstance();
+                                    c.setTimeInMillis(System.currentTimeMillis());
+                                    c.add(Calendar.SECOND,5);
+                                    AlarmManager am = (AlarmManager)view.getContext().getSystemService(Context.ALARM_SERVICE);
+                                    Intent intent = new Intent();
+                                    intent.setClass(view.getContext(), update.class);
+
+                                    PendingIntent pendingintent = PendingIntent.getBroadcast(
+                                            view.getContext(), 1, intent, 0);
+                                    am.set(AlarmManager.RTC_WAKEUP,c.getTimeInMillis(),pendingintent);
+
+
+                                }catch (Exception e){
+                                    e.printStackTrace();
+                                }
 
                                 if (checkBox.isChecked()){
                                     sharedPreferences = view.getContext().getSharedPreferences("data",Context.MODE_PRIVATE);
@@ -178,6 +217,53 @@ public class LoginFragment extends Fragment {
                                             .putBoolean("checkBox",false)
                                             .apply();
                                 }
+
+                                databaseRef = database.getReference("user/"+auth.getUid()+"/pictureArray/length");
+                                databaseRef.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        try{
+                                            get = Integer.parseInt(dataSnapshot.getValue().toString());
+                                            for (int i=1;i<=get;i++){
+                                                databaseRef = database.getReference("pictureArray/"+auth.getUid()+"/"+i);
+                                                databaseRef.addValueEventListener(new ValueEventListener() {
+                                                    @Override
+                                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                        String path = dataSnapshot.getValue().toString();
+                                                        if (path!=null){
+                                                            storageRef = firebaseStorage.getReference(path);
+                                                            storageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                                                                @Override
+                                                                public void onSuccess(byte[] bytes) {
+                                                                    PersonalFragment.image[bitmap_length++] = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
+                                                                    Log.e("bitmap",PersonalFragment.image[bitmap_length-1].toString());
+                                                                    if (bitmap_length==get){
+                                                                        bitmap_length=0;
+                                                                    }
+                                                                }
+                                                            });
+                                                        }
+                                                    }
+
+                                                    @Override
+                                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                    }
+                                                });
+                                            }
+                                        }catch (Exception e){
+                                            e.printStackTrace();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+                                });
+
+
+
                             }else{
                                 Log.e("auth","login fail");
                                 Toast.makeText(view.getContext(),"帳號或密碼錯誤!",Toast.LENGTH_SHORT).show();
@@ -187,6 +273,17 @@ public class LoginFragment extends Fragment {
 
         }
     };
+
+
+    public static class update extends BroadcastReceiver{
+
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            MainActivity  mainActivity = new MainActivity();
+            mainActivity.update();
+        }
+    }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {

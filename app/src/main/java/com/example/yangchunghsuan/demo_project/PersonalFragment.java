@@ -1,6 +1,8 @@
 package com.example.yangchunghsuan.demo_project;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,6 +14,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +26,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -35,7 +45,6 @@ public class PersonalFragment extends Fragment {
     public static PersonalFragment newInstance() {
 
         Bundle args = new Bundle();
-
         PersonalFragment fragment = new PersonalFragment();
         fragment.setArguments(args);
         return fragment;
@@ -87,14 +96,40 @@ public class PersonalFragment extends Fragment {
     public String userName;
     FirebaseAuth auth = FirebaseAuth.getInstance();
     FirebaseDatabase storge = FirebaseDatabase.getInstance();
+    View view;
+
+    public static Bitmap[] image = new Bitmap[100];
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         //取得目前這個view的內容
-        final View view = inflater.inflate(R.layout.fragment_personal, container, false);
+        view = inflater.inflate(R.layout.fragment_personal, container, false);
         //從這個view找button
+        List<Map<String,Object>> list = new ArrayList<>();
 
+        for (int i=0;image[i]!=null;i++){
+            Map<String,Object> item = new HashMap<>();
+            item.put("image", image[i]);
+            list.add(item);
+        }
+
+        SimpleAdapter simpleAdapter = new SimpleAdapter(view.getContext(),list,R.layout.grid_item,new String[]{"image"},new int[]{R.id.grid_image});
+        simpleAdapter.setViewBinder(new SimpleAdapter.ViewBinder() {
+            @Override
+            public boolean setViewValue(View view, Object data, String textRepresentation) {
+                if(view instanceof ImageView && data instanceof Bitmap){
+                    ImageView i = (ImageView)view;
+                    i.setImageBitmap((Bitmap) data);
+                    return true;
+                }
+                return false;
+            }
+        });
+        GridView gridView = view.findViewById(R.id.gv_image);
+        gridView.setNumColumns(3);
+        gridView.setAdapter(simpleAdapter);
 
 
         final String currntUserId = auth.getCurrentUser().getUid();
@@ -130,6 +165,7 @@ public class PersonalFragment extends Fragment {
                 fragmentTransaction.replace(R.id.frame,LoginFragment.newInstance()).commitAllowingStateLoss();
                 MainActivity.toolbar.setTitle("Login");
                 MainActivity.login = false;
+                image = new Bitmap[100];
             }
         });
 

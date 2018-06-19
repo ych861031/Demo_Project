@@ -1,6 +1,8 @@
 package com.example.yangchunghsuan.demo_project;
 
 import android.Manifest;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -8,16 +10,25 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
+
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.MapFragment;
+
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static android.Manifest.permission.CAMERA;
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 
 public class MainActivity extends AppCompatActivity implements HomeFragment.OnFragmentInteractionListener,SearchFragment.OnFragmentInteractionListener
@@ -33,7 +44,6 @@ LoginFragment.OnFragmentInteractionListener{
 
 
 
-    SearchView searchView;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -43,32 +53,28 @@ LoginFragment.OnFragmentInteractionListener{
             switch (item.getItemId()) {
                 case R.id.navigation_home:
                     getSupportFragmentManager().beginTransaction().replace(R.id.frame,HomeFragment.newInstance()).commitAllowingStateLoss();
-                    searchView.setVisibility(View.GONE);
                     toolbar.setTitle("官方推薦");
                     return true;
                 case R.id.navigation_search:
                     getSupportFragmentManager().beginTransaction().replace(R.id.frame,SearchFragment.newInstance()).commitAllowingStateLoss();
-                    searchView.setVisibility(View.VISIBLE);
+                    setTitle("使用者列表");
                     return true;
                 case R.id.navigation_upload:
                     getSupportFragmentManager().beginTransaction().replace(R.id.frame,UploadFragment.newInstance()).commitAllowingStateLoss();
-                    setTitle("Upload");
-                    searchView.setVisibility(View.GONE);
+                    setTitle("照片上傳");
                     return true;
                 case R.id.navigation_nearby:
                     getSupportFragmentManager().beginTransaction().replace(R.id.frame,NearbyFragment.newInstance()).commitAllowingStateLoss();
-                    setTitle("Nearby");
-                    searchView.setVisibility(View.GONE);
+                    setTitle("附近餐廳");
                     return true;
                 case R.id.navigation_personal:
                     if (!login){
                         getSupportFragmentManager().beginTransaction().replace(R.id.frame,LoginFragment.newInstance()).commitAllowingStateLoss();
-                        setTitle("Login");
+                        setTitle("登入");
                     }else {
                         getSupportFragmentManager().beginTransaction().replace(R.id.frame,PersonalFragment.newInstance()).commitAllowingStateLoss();
-                        setTitle("Personal");
+                        setTitle("個人頁面");
                     }
-                    searchView.setVisibility(View.GONE);
                     return true;
             }
             return false;
@@ -84,30 +90,33 @@ LoginFragment.OnFragmentInteractionListener{
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         Log.e("!!!","homeOnCreate");
         navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         getSupportFragmentManager().beginTransaction().replace(R.id.frame,HomeFragment.newInstance()).commitAllowingStateLoss();
-        searchView = findViewById(R.id.searchView);
+
 
         if (ActivityCompat.checkSelfPermission(this,ACCESS_FINE_LOCATION)==PackageManager.PERMISSION_GRANTED||ActivityCompat.checkSelfPermission(this,ACCESS_COARSE_LOCATION)==PackageManager.PERMISSION_GRANTED){
             getSupportFragmentManager().beginTransaction().replace(R.id.frame,NearbyFragment.newInstance()).commitAllowingStateLoss();
         }else{
             ActivityCompat.requestPermissions(this,new String[]{ACCESS_FINE_LOCATION,ACCESS_COARSE_LOCATION},1000);
         }
+        if (ActivityCompat.checkSelfPermission(this,READ_EXTERNAL_STORAGE)!=PackageManager.PERMISSION_GRANTED||ActivityCompat.checkSelfPermission(this,WRITE_EXTERNAL_STORAGE)!=PackageManager.PERMISSION_GRANTED||
+                ActivityCompat.checkSelfPermission(this,CAMERA)!=PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this,new String[]{READ_EXTERNAL_STORAGE,WRITE_EXTERNAL_STORAGE,CAMERA},1000);
+        }
 
 
         getSupportFragmentManager().beginTransaction().replace(R.id.frame,SearchFragment.newInstance()).commitAllowingStateLoss();
         setTitle("Login");
         navigation.setSelectedItemId(R.id.navigation_personal);
-        getSupportFragmentManager().beginTransaction().replace(R.id.frame,LoginFragment.newInstance()).commitAllowingStateLoss();
 
-        //get nearby api
-//        getRestaurant get = new getRestaurant();
-//        get.execute();
+
     }
 
+    public void update(){
+        navigation.setSelectedItemId(R.id.navigation_personal);
+    }
 
 
     @Override
@@ -161,4 +170,19 @@ LoginFragment.OnFragmentInteractionListener{
 
     }
 
+
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//
+//
+//        getMenuInflater().inflate(R.menu.menu_search_view, menu);
+//        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+//
+//        searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+//
+//        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+//
+//
+//        return super.onCreateOptionsMenu(menu);
+//    }
 }

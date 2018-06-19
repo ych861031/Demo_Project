@@ -39,6 +39,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> im
         holder.imageView.setImageBitmap(homeInfo.getBitmap());
         holder.textView_name.setText(homeInfo.getId());
         holder.textView_address.setText(homeInfo.getAddress());
+        holder.comment.setText(homeInfo.getComment());
     }
 
     @Override
@@ -59,6 +60,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> im
     public class ViewHolder extends RecyclerView.ViewHolder{
         TextView textView_name;
         TextView textView_address;
+        TextView comment;
         ImageView imageView;
 
         protected View rootView;
@@ -68,6 +70,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> im
             imageView = itemView.findViewById(R.id.imageView);
             textView_name = itemView.findViewById(R.id.textView_store_name);
             textView_address = itemView.findViewById(R.id.textView_address_content);
+            comment = itemView.findViewById(R.id.textview_comment_content);
 
             rootView = view;
         }

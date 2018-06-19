@@ -38,8 +38,10 @@ public class home2 extends PageView{
     public static Bitmap[] bitmaps = new Bitmap[100];
     public static String[] store_name = new String[100];
     public static String[] address = new String[100];
+    public static String[] comment = new String[100];
     int name_length = 0;
     int loc_length = 0;
+    int comment_length= 0;
     int i=0;
     String get;
     int length = 0;
@@ -111,6 +113,20 @@ public class home2 extends PageView{
 
                                     }
                                 });
+                                databaseRefAddress = database.getReference("userpage/" + i + "/info/comment");
+                                databaseRefAddress.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        Log.e("get value",dataSnapshot.getValue().toString());
+                                        get = dataSnapshot.getValue().toString();
+                                        comment[comment_length++] = get;
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+                                });
 
 
                             }
@@ -128,10 +144,10 @@ public class home2 extends PageView{
 
 
 
-        if (address[0]!=null&&store_name[0]!=null&&bitmaps[0]!=null){
+        if (address[0]!=null&&store_name[0]!=null&&bitmaps[0]!=null&&comment[0]!=null){
             for (int i =0;address[0]!=null&&store_name[0]!=null&&bitmaps[i]!=null;i++){
                 Log.e("name",store_name[i]);
-                items.add(new HomeInfo(store_name[i],address[i],bitmaps[i]));
+                items.add(new HomeInfo(store_name[i],address[i],comment[i],bitmaps[i]));
             }
         }
 

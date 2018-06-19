@@ -1,39 +1,19 @@
 package com.example.yangchunghsuan.demo_project;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
+import android.widget.SearchView;
 import android.widget.Toast;
-import android.widget.Toolbar;
-
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.maps.MapView;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 
 
 /**
@@ -90,8 +70,8 @@ public class SearchFragment extends Fragment {
         return fragment;
     }
 
-
     get_Info get= new get_Info();
+    SearchView searchView;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,6 +82,7 @@ public class SearchFragment extends Fragment {
     }
 
     View view;
+    ListView listView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -111,8 +92,44 @@ public class SearchFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_search, container, false);
         get.getInfo(view);
 
+        listView = view.findViewById(R.id.user_list);
         return view;
     }
+
+
+//    private SearchView.OnQueryTextListener queryListener = new SearchView.OnQueryTextListener() {
+//
+//        @Override
+//        public boolean onQueryTextChange(String newText) {
+//            if (!TextUtils.isEmpty(newText)){
+//                Log.e("!!!!","!!!!");
+//                listView.setFilterText(newText);
+//            }else {
+//                Log.e("????","!!!!");
+//                listView.clearTextFilter();
+//            }
+//
+//            return false;
+//        }
+//
+//        @Override
+//        public boolean onQueryTextSubmit(String query) {
+//            Toast.makeText(view.getContext(),"輸入的是"+query,Toast.LENGTH_SHORT);
+//            return false;
+//        }
+//    };
+
+//    @Override
+//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//        super.onCreateOptionsMenu(menu, inflater);
+//        try {
+//            SearchView searchView = (SearchView) menu.findItem(R.id.searchView).getActionView();
+//            searchView.setOnQueryTextListener(queryListener);
+//            searchView.onActionViewExpanded();
+//        }catch(Exception e){
+//
+//        }
+//    }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -153,9 +170,5 @@ public class SearchFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-    }
 
 }

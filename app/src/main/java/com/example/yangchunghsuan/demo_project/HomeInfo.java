@@ -6,13 +6,15 @@ public class HomeInfo {
     private String id;
     private String address;
     private Bitmap bitmap;
+    private String comment;
 
 
 
-    public HomeInfo(String id,String address,Bitmap bitmap){
+    public HomeInfo(String id,String address,String comment,Bitmap bitmap){
         this.id = id;
         this.bitmap = bitmap;
         this.address = address;
+        this.comment = comment;
     }
 
     public void setId(String id) {
@@ -33,5 +35,13 @@ public class HomeInfo {
 
     public String getAddress() {
         return address;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public String getComment() {
+        return comment;
     }
 }

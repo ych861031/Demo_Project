@@ -14,8 +14,8 @@
             android:id="@+id/food"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_weight="0.01"></ImageView>
-            <!--app:srcCompat="@drawable/food" />-->
+            android:layout_weight="0.01"
+            app:srcCompat="@drawable/food"/>
 
         <LinearLayout
             android:layout_width="match_parent"
